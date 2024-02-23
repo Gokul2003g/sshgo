@@ -1,0 +1,13 @@
+[package]
+name = "my_project"
+version = "0.1.0"
+edition = "2021"
+
+# Specify the main source file
+[[bin]]
+name = "my_binary"
+path = "./check_os.rs"
+
+[dependencies]
+os_info = "3.7.0"
+
