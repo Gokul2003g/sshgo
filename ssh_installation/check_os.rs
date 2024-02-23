@@ -63,14 +63,12 @@ fn install_ssh() {
 fn enable_ssh() {
     println!("Enabling SSH...");
 
-    // Start the sshd service
     let start_sshd = Command::new("sudo").args(&["systemctl", "start", "sshd"]).status();
 
     match start_sshd {
         Ok(exit_status) => {
             if exit_status.success() {
                 println!("OpenSSH Server started successfully.");
-                // Optional: Set sshd service to start automatically
                 Command::new("sudo")
                     .args(&["systemctl", "enable", "sshd"])
                     .status()
