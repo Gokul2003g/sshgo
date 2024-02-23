@@ -1,2 +1,2 @@
-# sshgo
-Front-end for ssh.
+# Installing openssh on the machine
+
