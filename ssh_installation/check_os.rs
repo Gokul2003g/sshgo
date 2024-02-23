@@ -21,7 +21,10 @@ fn install_ssh() {
 
                     match choice.trim() {
                         "1" => run_command("sudo", &["apt", "install", "-y", "openssh-client"]),
-                        "2" => run_command("sudo", &["apt", "install", "-y", "openssh-server"]),
+                        "2" => {
+                            run_command("sudo", &["apt", "install", "-y", "openssh-server"]);
+                            enable_ssh();
+                        }
                         _ => println!("Invalid choice. Please enter 1 or 2."),
                     }
                 }
@@ -35,16 +38,51 @@ fn install_ssh() {
 
                     match choice.trim() {
                         "1" => run_command("sudo", &["yum", "install", "-y", "openssh-clients"]),
-                        "2" => run_command("sudo", &["yum", "install", "-y", "openssh-server"]),
+                        "2" => {
+                            run_command("sudo", &["yum", "install", "-y", "openssh-server"]);
+                            enable_ssh();
+                        }
                         _ => println!("Invalid choice. Please enter 1 or 2."),
                     }
                 }
-                "arch" => run_command("sudo", &["pacman", "-S", "--noconfirm", "openssh"]),
+                "arch" => {
+                    run_command("sudo", &["pacman", "-S", "--noconfirm", "openssh"]);
+                    enable_ssh();
+                }
                 _ => println!("Unsupported Linux distribution."),
             }
         }
-        "macos" => run_command("brew", &["install", "openssh"]),
+        "macos" => {
+            run_command("brew", &["install", "openssh"]);
+            enable_ssh();
+        }
         _ => println!("Unsupported operating system."),
+    }
+}
+
+fn enable_ssh() {
+    println!("Enabling SSH...");
+
+    // Start the sshd service
+    let start_sshd = Command::new("sudo").args(&["systemctl", "start", "sshd"]).status();
+
+    match start_sshd {
+        Ok(exit_status) => {
+            if exit_status.success() {
+                println!("OpenSSH Server started successfully.");
+                // Optional: Set sshd service to start automatically
+                Command::new("sudo")
+                    .args(&["systemctl", "enable", "sshd"])
+                    .status()
+                    .expect("Failed to enable sshd service.");
+            } else {
+                eprintln!("Failed to start OpenSSH Server.");
+            }
+        }
+        Err(e) => {
+            eprintln!("Error running command: {}", e);
+            exit(1);
+        }
     }
 }
 
@@ -54,8 +92,27 @@ fn get_linux_distro() -> String {
         let distro_name = distro.lines().find(|line| line.starts_with("ID=")).map(|line| line.split('=').nth(1).unwrap_or_default());
         distro_name.unwrap_or_default().to_lowercase()
     } else {
-        println!("Error: /etc/os-release not found.");
-        String::new()
+        println!("Error: /etc/os-release not found. Using uname -srm instead.");
+        get_linux_distro_uname()
+    }
+}
+
+fn get_linux_distro_uname() -> String {
+    let uname_output = Command::new("uname").args(&["-srm"]).output();
+    
+    match uname_output {
+        Ok(output) => {
+            if output.status.success() {
+                String::from_utf8_lossy(&output.stdout).trim().to_lowercase()
+            } else {
+                eprintln!("Error running uname command.");
+                String::new()
+            }
+        }
+        Err(e) => {
+            eprintln!("Error running uname command: {}", e);
+            String::new()
+        }
     }
 }
 
