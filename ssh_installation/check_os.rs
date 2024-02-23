@@ -56,25 +56,162 @@ fn install_ssh() {
             run_command("brew", &["install", "openssh"]);
             enable_ssh();
         }
+        "windows" => {
+            println!("Choose the option:");
+            println!("1. Install OpenSSH Client");
+            println!("2. Install OpenSSH Server");
+
+            let mut choice = String::new();
+            io::stdin().read_line(&mut choice).expect("Failed to read user input");
+
+            match choice.trim() {
+                "1" => install_windows_ssh_client(),
+                "2" => install_windows_ssh_server(),
+                _ => println!("Invalid choice. Please enter 1 or 2."),
+            }
+        }
         _ => println!("Unsupported operating system."),
     }
 }
 
 fn enable_ssh() {
-    println!("Enabling SSH...");
+    let system = std::env::consts::OS;
 
-    let start_sshd = Command::new("sudo").args(&["systemctl", "start", "sshd"]).status();
+    match system {
+        "linux" => {
+            println!("Enabling SSH...");
 
-    match start_sshd {
+            let start_sshd = Command::new("sudo").args(&["systemctl", "start", "sshd"]).status();
+
+            match start_sshd {
+                Ok(exit_status) => {
+                    if exit_status.success() {
+                        println!("OpenSSH Server started successfully.");
+                        Command::new("sudo")
+                            .args(&["systemctl", "enable", "sshd"])
+                            .status()
+                            .expect("Failed to enable sshd service.");
+                    } else {
+                        eprintln!("Failed to start OpenSSH Server.");
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Error running command: {}", e);
+                    exit(1);
+                }
+            }
+        }
+        "macos" => {
+            println!("Enabling SSH...");
+
+            let start_sshd = Command::new("sudo").args(&["systemsetup", "-setremotelogin", "on"]).status();
+
+            match start_sshd {
+                Ok(exit_status) => {
+                    if exit_status.success() {
+                        println!("OpenSSH Server started successfully.");
+                    } else {
+                        eprintln!("Failed to start OpenSSH Server.");
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Error running command: {}", e);
+                    exit(1);
+                }
+            }
+        }
+        "windows" => {
+            println!("Enabling SSH...");
+
+            let start_sshd = Command::new("PowerShell")
+                .args(&["Start-Service", "sshd"])
+                .status();
+
+            match start_sshd {
+                Ok(exit_status) => {
+                    if exit_status.success() {
+                        println!("OpenSSH Server started successfully.");
+                        Command::new("PowerShell")
+                            .args(&["Set-Service", "-Name", "sshd", "-StartupType", "'Automatic'"])
+                            .status()
+                            .expect("Failed to set sshd service startup type.");
+                    } else {
+                        eprintln!("Failed to start OpenSSH Server.");
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Error running command: {}", e);
+                    exit(1);
+                }
+            }
+        }
+        _ => println!("Unsupported operating system."),
+    }
+}
+
+fn install_windows_ssh_client() {
+    let ssh_client_check = Command::new("PowerShell")
+        .args(&["Get-WindowsCapability", "-Online", "|", "Where-Object", "Name", "-like", "'OpenSSH*'"])
+        .status();
+
+    match ssh_client_check {
         Ok(exit_status) => {
             if exit_status.success() {
-                println!("OpenSSH Server started successfully.");
-                Command::new("sudo")
-                    .args(&["systemctl", "enable", "sshd"])
-                    .status()
-                    .expect("Failed to enable sshd service.");
+                let install_ssh_client = Command::new("PowerShell")
+                    .args(&["Add-WindowsCapability", "-Online", "-Name", "OpenSSH.Client~~~~0.0.1.0"])
+                    .status();
+
+                match install_ssh_client {
+                    Ok(exit_status) => {
+                        if exit_status.success() {
+                            println!("OpenSSH Client installed successfully.");
+                        } else {
+                            eprintln!("Failed to install OpenSSH Client.");
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Error running command: {}", e);
+                        exit(1);
+                    }
+                }
             } else {
-                eprintln!("Failed to start OpenSSH Server.");
+                eprintln!("Failed to check OpenSSH availability.");
+            }
+        }
+        Err(e) => {
+            eprintln!("Error running command: {}", e);
+            exit(1);
+        }
+    }
+}
+
+fn install_windows_ssh_server() {
+    let ssh_server_check = Command::new("PowerShell")
+        .args(&["Get-WindowsCapability", "-Online", "|", "Where-Object", "Name", "-like", "'OpenSSH*'"])
+        .status();
+
+    match ssh_server_check {
+        Ok(exit_status) => {
+            if exit_status.success() {
+                let install_ssh_server = Command::new("PowerShell")
+                    .args(&["Add-WindowsCapability", "-Online", "-Name", "OpenSSH.Server~~~~0.0.1.0"])
+                    .status();
+
+                match install_ssh_server {
+                    Ok(exit_status) => {
+                        if exit_status.success() {
+                            println!("OpenSSH Server installed successfully.");
+                        } else {
+                            eprintln!("Failed to install OpenSSH Server.");
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Error running command: {}", e);
+                        exit(1);
+                    }
+                }
+            } else {
+                eprintln!("Failed to check OpenSSH availability.");
             }
         }
         Err(e) => {
