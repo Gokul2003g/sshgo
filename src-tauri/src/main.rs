@@ -8,7 +8,7 @@
 // }
 
 #[tauri::command]
-fn password_auth(username: String, password: &str) {
+fn password_auth(username: &str, password: &str) {
     println!(
         "The entered username: {} and password: {}",
         username, password

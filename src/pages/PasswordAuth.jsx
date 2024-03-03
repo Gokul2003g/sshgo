@@ -16,12 +16,12 @@ const PasswordAuth = () => {
         className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
-          password_auth(username, password);
+          password_auth();
         }}
       >
         <input
           type="text"
-          placeholder="Username"
+          placeholder="user@ipaddress"
           onChange={(e) => setUsername(e.currentTarget.value)}
           className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
         />

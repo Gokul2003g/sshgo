@@ -7,6 +7,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import PasswordAuth from "../../pages/PasswordAuth";
+import PKA from "../../pages/PKA";
 
 export function UnderlineTabs() {
   const [activeTab, setActiveTab] = useState("password");
@@ -48,7 +49,9 @@ export function UnderlineTabs() {
         <TabPanel value="password">
           <PasswordAuth />
         </TabPanel>
-        <TabPanel value="pka">Work in Progress</TabPanel>
+        <TabPanel value="pka">
+          <PKA />
+        </TabPanel>
         <TabPanel value="certificate">Work in Progress</TabPanel>
       </TabsBody>
     </Tabs>
