@@ -52,7 +52,9 @@ export function UnderlineTabs() {
         <TabPanel value="pka">
           <PKA />
         </TabPanel>
-        <TabPanel value="certificate">Work in Progress</TabPanel>
+        <TabPanel value="certificate" className="text-white">
+          Work in Progress
+        </TabPanel>
       </TabsBody>
     </Tabs>
   );

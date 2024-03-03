@@ -15,9 +15,14 @@ fn password_auth(username: &str, password: &str) {
     );
 }
 
+#[tauri::command]
+fn generate_keys(algorithm: &str) {
+    println!("Requested algorithm is: {}", algorithm);
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![password_auth])
+        .invoke_handler(tauri::generate_handler![password_auth, generate_keys])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
