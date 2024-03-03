@@ -8,10 +8,13 @@ This template should help get you started developing with Tauri and React in Vit
 
 ## To run
 
-```
-npm i
-```
+Clone the repo
 
 ```
+cd sshgo
+
+npm i
+
+
 npm run tauri dev
 ```
