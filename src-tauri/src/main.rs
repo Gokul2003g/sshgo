@@ -6,13 +6,21 @@
 // fn greet(name: &str) -> String {
 //     format!("Hello, {}! You've been greeted from Rust!", name)
 // }
+use std::process::{exit, Command};
 
 #[tauri::command]
-fn password_auth(username: &str, password: &str) {
-    println!(
-        "The entered username: {} and password: {}",
-        username, password
-    );
+fn password_auth(username: &str) {
+    match Command::new("sh")
+        .arg("-c")
+        .arg(format!("{} --hold ssh {}", "kitty", username))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
+    }
 }
 
 #[tauri::command]
