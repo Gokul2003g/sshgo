@@ -31,7 +31,7 @@ fn generate_keys(algorithm: &str, password: &str) {
             "-t",
             algorithm,
             "-f",
-            &format!("/home/{}/.ssh/{}", username, algorithm),
+            &format!("/home/{}/.ssh/id_{}", username, algorithm),
             "-N",
             password,
         ])
@@ -57,9 +57,44 @@ fn generate_keys(algorithm: &str, password: &str) {
     }
 }
 
+#[tauri::command]
+fn secure_copy(username: &str) {
+    match Command::new("sh")
+        .arg("-c")
+        .arg(format!("{} --hold ssh-copy-id {}", "kitty", username))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
+    }
+}
+
+#[tauri::command]
+fn connect_ssh(username: &str) {
+    match Command::new("sh")
+        .arg("-c")
+        .arg(format!("{} --hold ssh {}", "kitty", username))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
+    }
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![password_auth, generate_keys])
+        .invoke_handler(tauri::generate_handler![
+            password_auth,
+            generate_keys,
+            connect_ssh,
+            secure_copy
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

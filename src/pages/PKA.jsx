@@ -6,15 +6,20 @@ import React, { useState } from "react";
 const PKA = () => {
   const [algorithm, setAlgorithm] = useState("rsa");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   async function generate_keys() {
     await invoke("generate_keys", { algorithm, password });
   }
 
+  async function connectSSH() {
+    await invoke("password_auth", { username });
+  }
+
   return (
-    <div className="flex flex-row gap-4 items-center justify-center font-bold">
+    <div className="flex flex-col gap-4 items-center justify-center font-bold">
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-col w-fit gap-4"
         onSubmit={(e) => {
           e.preventDefault();
           generate_keys();
@@ -47,6 +52,27 @@ const PKA = () => {
         />
         <Button type="submit" color="blue" ripple="light">
           Generate
+        </Button>
+        <p className="text-xl text-white">
+          Copy the key {algorithm}.pub file generated in <code>~/.ssh/ </code>{" "}
+          to the host systems <code> ~/.ssh/authorized_keys </code> file.
+        </p>
+      </form>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          connectSSH();
+        }}
+      >
+        <input
+          type="text"
+          placeholder="user@ipaddress"
+          onChange={(e) => setUsername(e.currentTarget.value)}
+          className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
+        />
+        <Button type="submit" color="blue" ripple="light">
+          Connect
         </Button>
       </form>
     </div>
