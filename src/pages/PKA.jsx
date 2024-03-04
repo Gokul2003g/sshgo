@@ -48,7 +48,6 @@ const PKA = () => {
         <Button type="submit" color="blue" ripple="light">
           Generate
         </Button>
-        {password}
       </form>
     </div>
   );
