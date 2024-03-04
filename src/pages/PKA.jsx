@@ -5,9 +5,10 @@ import React, { useState } from "react";
 
 const PKA = () => {
   const [algorithm, setAlgorithm] = useState("rsa");
+  const [password, setPassword] = useState("");
 
   async function generate_keys() {
-    await invoke("generate_keys", { algorithm });
+    await invoke("generate_keys", { algorithm, password });
   }
 
   return (
@@ -38,9 +39,16 @@ const PKA = () => {
           <Option value="ed25519">ED25519</Option>
           <Option value="ed25519-sk">ED25519-SK</Option>
         </Select>
+        <input
+          type="text"
+          placeholder="Password for key"
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
+        />
         <Button type="submit" color="blue" ripple="light">
           Generate
         </Button>
+        {password}
       </form>
     </div>
   );
