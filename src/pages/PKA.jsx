@@ -13,13 +13,13 @@ const PKA = () => {
   }
 
   async function connectSSH() {
-    await invoke("password_auth", { username });
+    await invoke("secure_copy", { username });
   }
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center font-bold">
       <form
-        className="flex flex-col w-fit gap-4"
+        className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
           generate_keys();
@@ -72,7 +72,7 @@ const PKA = () => {
           className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
         />
         <Button type="submit" color="blue" ripple="light">
-          Connect
+          Secure Copy
         </Button>
       </form>
     </div>
