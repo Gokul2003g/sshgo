@@ -24,10 +24,37 @@ fn password_auth(username: &str) {
 }
 
 #[tauri::command]
-fn generate_keys(algorithm: &str) {
-    println!("Requested algorithm is: {}", algorithm);
-}
+fn generate_keys(algorithm: &str, password: &str) {
+    let output = Command::new("ssh-keygen")
+        .args([
+            "-t",
+            algorithm,
+            "-f",
+            &format!("~/.ssh/{}", algorithm),
+            "-N",
+            password,
+        ])
+        .output();
 
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                println!("{} keys generated successfully.", algorithm.to_uppercase());
+            } else {
+                eprintln!(
+                    "Error generating {} keys: {:?}",
+                    algorithm.to_uppercase(),
+                    output.stderr
+                );
+                exit(1);
+            }
+        }
+        Err(e) => {
+            eprintln!("Error generating {} keys: {}", algorithm.to_uppercase(), e);
+            exit(1);
+        }
+    }
+}
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![password_auth, generate_keys])
