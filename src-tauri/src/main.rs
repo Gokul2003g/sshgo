@@ -25,12 +25,13 @@ fn password_auth(username: &str) {
 
 #[tauri::command]
 fn generate_keys(algorithm: &str, password: &str) {
+    let username = whoami::username();
     let output = Command::new("ssh-keygen")
         .args([
             "-t",
             algorithm,
             "-f",
-            &format!("~/.ssh/{}", algorithm),
+            &format!("/home/{}/.ssh/{}", username, algorithm),
             "-N",
             password,
         ])
@@ -55,6 +56,7 @@ fn generate_keys(algorithm: &str, password: &str) {
         }
     }
 }
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![password_auth, generate_keys])
