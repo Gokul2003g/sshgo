@@ -9,6 +9,7 @@ const PKA = () => {
   const [username, setUsername] = useState("");
 
   async function generate_keys() {
+    // Pass the selected algorithm to the Rust function
     await invoke("generate_keys", { algorithm, password });
   }
 
@@ -35,7 +36,7 @@ const PKA = () => {
           lockScroll
           className="bg-gray-900 text-white"
           value={algorithm}
-          onChange={() => setAlgorithm(value)}
+          onChange={(value) => setAlgorithm(value)}  // Fix: Pass the value to setAlgorithm
         >
           <Option value="rsa">RSA</Option>
           <Option value="dsa">DSA</Option>
@@ -55,7 +56,7 @@ const PKA = () => {
         </Button>
         <p className="text-xl text-white">
           Copy the key {algorithm}.pub file generated in <code>~/.ssh/ </code>{" "}
-          to the host systems <code> ~/.ssh/authorized_keys </code> file.
+          to the host system's <code> ~/.ssh/authorized_keys </code> file.
         </p>
       </form>
       <form
@@ -80,3 +81,4 @@ const PKA = () => {
 };
 
 export default PKA;
+
