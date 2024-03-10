@@ -9,7 +9,6 @@ const PKA = () => {
   const [username, setUsername] = useState("");
 
   async function generate_keys() {
-    // Pass the selected algorithm to the Rust function
     await invoke("generate_keys", { algorithm, password });
   }
 
@@ -36,7 +35,7 @@ const PKA = () => {
           lockScroll
           className="bg-gray-900 text-white"
           value={algorithm}
-          onChange={(value) => setAlgorithm(value)}  // Fix: Pass the value to setAlgorithm
+          onChange={(value) => setAlgorithm(value)}  
         >
           <Option value="rsa">RSA</Option>
           <Option value="dsa">DSA</Option>
