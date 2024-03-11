@@ -38,7 +38,7 @@ const PKA = () => {
           id="algo"
           lockScroll
           className="bg-gray-900 text-white"
-          onClick={() => setAlgorithm(value)}
+          onClick={(value) => setAlgorithm(value)}
         >
           <Option value="rsa">RSA</Option>
           <Option value="dsa">DSA</Option>
