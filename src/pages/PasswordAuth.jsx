@@ -6,11 +6,11 @@ const PasswordAuth = () => {
   const [username, setUsername] = useState("");
 
   async function password_auth() {
-    await invoke("password_auth", { username });
+    await invoke("connect_ssh", { username });
   }
 
   return (
-    <div className="flex flex-row gap-4 items-center justify-center font-bold">
+    <div className="flex flex-col gap-4 items-center justify-center font-bold">
       <form
         className="flex flex-col gap-4"
         onSubmit={(e) => {
