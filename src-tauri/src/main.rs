@@ -21,9 +21,6 @@ fn password_auth(username: &str) {
 
 #[tauri::command]
 fn generate_keys(algorithm: &str, password: &str) {
-    // Print the algorithm value received
-    println!("Received algorithm: {}", algorithm);
-
     let username = whoami::username();
     let output = Command::new("ssh-keygen")
         .args([
