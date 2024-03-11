@@ -2,10 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-// #[tauri::command]
-// fn greet(name: &str) -> String {
-//     format!("Hello, {}! You've been greeted from Rust!", name)
-// }
 use std::process::{exit, Command};
 
 #[tauri::command]
@@ -26,36 +22,35 @@ fn password_auth(username: &str) {
 #[tauri::command]
 fn generate_keys(algorithm: &str, password: &str) {
     let username = whoami::username();
-    println!("{}", algorithm);
-    // let output = Command::new("ssh-keygen")
-    //     .args([
-    //         "-t",
-    //         algorithm,
-    //         "-f",
-    //         &format!("/home/{}/.ssh/id_{}", username, algorithm),
-    //         "-N",
-    //         password,
-    //     ])
-    //     .output();
-    //
-    // match output {
-    //     Ok(output) => {
-    //         if output.status.success() {
-    //             println!("{} keys generated successfully.", algorithm.to_uppercase());
-    //         } else {
-    //             eprintln!(
-    //                 "Error generating {} keys: {:?}",
-    //                 algorithm.to_uppercase(),
-    //                 output.stderr
-    //             );
-    //             exit(1);
-    //         }
-    //     }
-    //     Err(e) => {
-    //         eprintln!("Error generating {} keys: {}", algorithm.to_uppercase(), e);
-    //         exit(1);
-    //     }
-    // }
+    let output = Command::new("ssh-keygen")
+        .args([
+            "-t",
+            algorithm,
+            "-f",
+            &format!("/home/{}/.ssh/id_{}", username, algorithm),
+            "-N",
+            password,
+        ])
+        .output();
+
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                println!("{} keys generated successfully.", algorithm.to_uppercase());
+            } else {
+                eprintln!(
+                    "Error generating {} keys: {:?}",
+                    algorithm.to_uppercase(),
+                    output.stderr
+                );
+                exit(1);
+            }
+        }
+        Err(e) => {
+            eprintln!("Error generating {} keys: {}", algorithm.to_uppercase(), e);
+            exit(1);
+        }
+    }
 }
 
 #[tauri::command]
