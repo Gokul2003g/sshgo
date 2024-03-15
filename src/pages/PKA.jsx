@@ -21,47 +21,8 @@ const PKA = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 items-center justify-center font-bold">
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          generate_keys();
-        }}
-      >
-        <label className="text-white" htmlFor="algo">
-          Select Key-Gen Algorithm
-        </label>
-        <Select
-          variant="static"
-          size="lg"
-          id="algo"
-          lockScroll
-          className="bg-gray-900 text-white"
-          onClick={(value) => setAlgorithm(value)}
-        >
-          <Option value="rsa">RSA</Option>
-          <Option value="dsa">DSA</Option>
-          <Option value="ecdsa">ECDSA</Option>
-          <Option value="ecdsa-sk">ECDSA-SK</Option>
-          <Option value="ed25519">ED25519</Option>
-          <Option value="ed25519-sk">ED25519-SK</Option>
-        </Select>
-        <input
-          type="text"
-          placeholder="Password for key"
-          onChange={(e) => setPassword(e.currentTarget.value)}
-          className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
-        />
-        <Button type="submit" color="blue" ripple="light">
-          Generate
-        </Button>
-        <p className="text-xl text-white">
-          Copy the key {algorithm}.pub file generated in <code>~/.ssh/ </code>{" "}
-          to the host systems <code> ~/.ssh/authorized_keys </code> file.
-        </p>
-      </form>
-      <div className="flex flex-row gap-16">
+    <div className="flex flex-col gap-8 items-center h-fit justify-center font-bold">
+      <div className="flex flex-col md:flex-row gap-16">
         <form
           className="flex flex-col gap-4"
           onSubmit={(e) => {
@@ -97,6 +58,46 @@ const PKA = () => {
           </Button>
         </form>
       </div>
+
+      <form
+        className="flex flex-col max-w-lg w-4/6 gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          generate_keys();
+        }}
+      >
+        <label className="text-white" htmlFor="algo">
+          Select Key-Gen Algorithm
+        </label>
+        <Select
+          variant="static"
+          size="lg"
+          id="algo"
+          lockScroll
+          className="bg-gray-900 text-white"
+          onChange={(value) => setAlgorithm(value)}
+        >
+          <Option value="rsa">RSA</Option>
+          <Option value="dsa">DSA</Option>
+          <Option value="ecdsa">ECDSA</Option>
+          <Option value="ecdsa-sk">ECDSA-SK</Option>
+          <Option value="ed25519">ED25519</Option>
+          <Option value="ed25519-sk">ED25519-SK</Option>
+        </Select>
+        <input
+          type="text"
+          placeholder="Password for key"
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
+        />
+        <Button type="submit" color="blue" ripple="light">
+          Generate
+        </Button>
+        <p className="text-xl text-white">
+          Copy the key {algorithm}.pub file generated in <code>~/.ssh/ </code>{" "}
+          to the host systems <code> ~/.ssh/authorized_keys </code> file.
+        </p>
+      </form>
     </div>
   );
 };
