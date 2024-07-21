@@ -1,23 +1,69 @@
-import { Button, Option } from "@material-tailwind/react";
-import { Select } from "@material-tailwind/react";
+// src/components/PKA.jsx
+import { Button, Option, Select } from "@material-tailwind/react";
 import { invoke } from "@tauri-apps/api";
 import React, { useState } from "react";
 
 const PKA = () => {
   const [algorithm, setAlgorithm] = useState("rsa");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [filename, setFilename] = useState(""); // State for the file name
 
   async function generate_keys() {
-    await invoke("generate_keys", { algorithm, password });
+    let currentFilename = filename;
+    let success = false;
+
+    while (!success) {
+      try {
+        console.log("Attempting to generate keys with filename:", currentFilename);
+        const result = await invoke("generate_keys_with_filename", { algorithm, password, filename: currentFilename, overwrite: false });
+        console.log(result); // Log successful key generation
+        success = true;
+      } catch (err) {
+        console.error("Failed to generate keys:", err);
+        if (err.includes("File already exists")) {
+          const userChoice = prompt("File already exists. Do you want to overwrite it? (yes/no)");
+
+          if (userChoice && userChoice.toLowerCase() === "yes") {
+            console.log("Overwriting file:", currentFilename);
+            try {
+              const result = await invoke("generate_keys_with_filename", { algorithm, password, filename: currentFilename, overwrite: true });
+              console.log(result); // Log successful key generation
+              success = true;
+            } catch (overwriteErr) {
+              console.error("Failed to overwrite keys:", overwriteErr);
+              alert(overwriteErr);
+              break;
+            }
+          } else {
+            let newFilename = prompt("Please enter a new filename:");
+            if (newFilename) {
+              currentFilename = newFilename; // Update the current filename
+              console.log("Trying new filename:", newFilename);
+            } else {
+              alert("You must provide a filename.");
+              break;
+            }
+          }
+        } else {
+          alert(err); // Show other errors to the user
+          break;
+        }
+      }
+    }
   }
 
-  async function connectSSH() {
-    await invoke("connect_ssh", { username });
+  async function secureCopy(username) {
+    console.log("Connecting with username:", username);
+    await invoke("secure_copy", { username })
+      .then(() => console.log("Secure copy command sent successfully"))
+      .catch(err => console.error("Failed to execute secure copy:", err));
   }
 
-  async function secureCopy() {
-    await invoke("secure_copy", { username });
+  async function connectSSH(username) {
+    console.log("Connecting SSH with username:", username);
+    await invoke("connect_ssh", { username })
+      .then(() => console.log("SSH command sent successfully"))
+      .catch(err => console.error("Failed to execute SSH connection:", err));
   }
 
   return (
@@ -27,7 +73,7 @@ const PKA = () => {
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            secureCopy();
+            secureCopy(username);
           }}
         >
           <input
@@ -44,7 +90,7 @@ const PKA = () => {
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            connectSSH();
+            connectSSH(username);
           }}
         >
           <input
@@ -86,6 +132,12 @@ const PKA = () => {
         </Select>
         <input
           type="text"
+          placeholder="Filename for key (e.g., id_rsa)"
+          onChange={(e) => setFilename(e.currentTarget.value)}
+          className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
+        />
+        <input
+          type="text"
           placeholder="Password for key"
           onChange={(e) => setPassword(e.currentTarget.value)}
           className="p-4 bg-transparent border-2 rounded-lg border-gray-500 text-white focus:border-gray-900"
@@ -95,7 +147,7 @@ const PKA = () => {
         </Button>
         <p className="text-xl text-white">
           Copy the key {algorithm}.pub file generated in <code>~/.ssh/ </code>{" "}
-          to the host systems <code> ~/.ssh/authorized_keys </code> file.
+          to the host system's <code> ~/.ssh/authorized_keys </code> file.
         </p>
       </form>
     </div>
@@ -103,3 +155,4 @@ const PKA = () => {
 };
 
 export default PKA;
+
