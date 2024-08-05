@@ -11,7 +11,7 @@ import { Connect_SSH } from "@/pages/Connect_SSH";
 function Auth_Modes() {
 
   return (
-    <Tabs defaultValue="certificate_auth" className="dark">
+    <Tabs defaultValue="certificate_auth">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="manage_keys">Manage Keys</TabsTrigger>
         <TabsTrigger value="connect_ssh">Connect SSH</TabsTrigger>
