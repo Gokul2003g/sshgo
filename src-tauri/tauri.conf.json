@@ -1,12 +1,12 @@
 {
   "build": {
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist"
   },
   "package": {
-    "productName": "ssh-go",
+    "productName": "sshgo",
     "version": "0.0.0"
   },
   "tauri": {
@@ -16,6 +16,16 @@
         "all": false,
         "open": true
       }
+    },
+    "windows": [
+      {
+        "title": "sshgo",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
     },
     "bundle": {
       "active": true,
@@ -28,18 +38,6 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ]
-    },
-    "security": {
-      "csp": null
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "ssh-go",
-        "width": 800,
-        "height": 600
-      }
-    ]
+    }
   }
 }

@@ -1,26 +1,40 @@
 {
-  "name": "ssh-go",
+  "name": "sshgo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri"
   },
   "dependencies": {
-    "@material-tailwind/react": "^2.1.8",
-    "@tauri-apps/api": "^1.5.2",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@tauri-apps/api": "^1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.424.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.52.2",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.5.8",
+    "@tauri-apps/cli": "^1",
+    "@types/node": "^22.1.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
-    "tailwindcss": "^3.4.1",
-    "vite": "^5.0.0"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1"
   }
 }
