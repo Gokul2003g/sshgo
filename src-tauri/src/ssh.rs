@@ -1,6 +1,8 @@
+use std::process::{exit, Command};
 use std::fs;
 use std::path::Path;
 use std::io;
+use dirs;
 
 pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
     let ssh_dir = dirs::home_dir().unwrap().join(".ssh");
@@ -8,8 +10,6 @@ pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
 
     if ssh_dir.exists() && ssh_dir.is_dir() {
         let mut key_files = Vec::new();
-
-        // Collect all files in the .ssh directory
         for entry in fs::read_dir(&ssh_dir)? {
             let entry = entry?;
             let path = entry.path();
@@ -18,13 +18,12 @@ pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
                 key_files.push(file_name);
             }
         }
-
-        // Identify private keys by checking if they have a corresponding .pub key
+        
         for file in &key_files {
             if !file.ends_with(".pub") {
                 let pub_key = format!("{}.pub", file);
                 if key_files.contains(&pub_key) {
-                    private_keys.push(file.clone()); // Add only private keys
+                    private_keys.push(file.clone()); 
                 }
             }
         }
@@ -57,57 +56,77 @@ pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     Ok(())
 }
 
-pub fn connect_ssh(username: &str) -> Result<(), String> {
-    let status = std::process::Command::new("sh")
+pub fn password_auth(username: &str) {
+    match Command::new("sh")
         .arg("-c")
-        .arg(format!("ssh {}", username))
-        .status()
-        .map_err(|e| e.to_string())?;
-
-    if status.success() {
-        Ok(())
-    } else {
-        Err("Failed to connect SSH".into())
+        .arg(format!("{} --hold ssh {}", "kitty", username))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
     }
 }
 
-pub fn generate_keys(algorithm: &str, password: &str) -> Result<(), String> {
-    let status = std::process::Command::new("ssh-keygen")
-        .args(&["-t", algorithm, "-N", password])
-        .status()
-        .map_err(|e| e.to_string())?;
+pub fn generate_keys(algorithm: &str, password: &str) {
+    let username = whoami::username();
+    let output = Command::new("ssh-keygen")
+        .args([
+            "-t",
+            algorithm,
+            "-f",
+            &format!("/home/{}/.ssh/id_{}", username, algorithm),
+            "-N",
+            password,
+        ])
+        .output();
 
-    if status.success() {
-        Ok(())
-    } else {
-        Err("Failed to generate keys".into())
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                println!("{} keys generated successfully.", algorithm.to_uppercase());
+            } else {
+                eprintln!(
+                    "Error generating {} keys: {:?}",
+                    algorithm.to_uppercase(),
+                    output.stderr
+                );
+                exit(1);
+            }
+        }
+        Err(e) => {
+            eprintln!("Error generating {} keys: {}", algorithm.to_uppercase(), e);
+            exit(1);
+        }
     }
 }
 
-pub fn password_auth(username: &str) -> Result<(), String> {
-    let status = std::process::Command::new("sh")
+pub fn secure_copy(address: &str) {
+    match Command::new("sh")
         .arg("-c")
-        .arg(format!("sshpass -p {} ssh {}", username, username))
-        .status()
-        .map_err(|e| e.to_string())?;
-
-    if status.success() {
-        Ok(())
-    } else {
-        Err("Failed to authenticate with password".into())
+        .arg(format!("{} --hold ssh-copy-id {}", "kitty", address))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
     }
 }
 
-pub fn secure_copy(address: &str) -> Result<(), String> {
-    let status = std::process::Command::new("scp")
-        .arg(address)
-        .status()
-        .map_err(|e| e.to_string())?;
-
-    if status.success() {
-        Ok(())
-    } else {
-        Err("Failed to perform secure copy".into())
+pub fn connect_ssh(username: &str) {
+    match Command::new("sh")
+        .arg("-c")
+        .arg(format!("{} --hold ssh {}", "kitty", username))
+        .spawn()
+    {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!("Error spawning terminal: {}", e);
+            exit(1);
+        }
     }
 }
-

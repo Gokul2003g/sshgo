@@ -1,16 +1,15 @@
-// src/pages/Auth_Modes.tsx
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/components/ui/tabs"
 import { Certificate_Authentication } from "@/pages/Certificate_Authentication";
 import { Connect_SSH } from "@/pages/Connect_SSH";
 import ManageKeys from "@/pages/ManageKeys";
 
 function Auth_Modes() {
+
   return (
     <Tabs defaultValue="certificate_auth">
       <TabsList className="grid w-full grid-cols-3">
@@ -19,7 +18,7 @@ function Auth_Modes() {
         <TabsTrigger value="certificate_auth">Certificate Authentication</TabsTrigger>
       </TabsList>
       <TabsContent value="manage_keys">
-        <ManageKeys />
+        < ManageKeys />
       </TabsContent>
       <TabsContent value="connect_ssh" className="flex justify-center items-center">
         <Connect_SSH />
@@ -28,8 +27,7 @@ function Auth_Modes() {
         <Certificate_Authentication />
       </TabsContent>
     </Tabs>
-  );
+  )
 }
 
 export default Auth_Modes;
-

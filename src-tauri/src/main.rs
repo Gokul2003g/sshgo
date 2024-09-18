@@ -4,6 +4,7 @@
 
 mod commands;
 mod ssh;
+mod file;
 
 fn main() {
     tauri::Builder::default()
@@ -18,4 +19,5 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
 
