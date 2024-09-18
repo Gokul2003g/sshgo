@@ -5,8 +5,7 @@ const ManageKeys = () => {
   const [keys, setKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-
-  // Fetch the list of SSH keys on component mount
+ 
   useEffect(() => {
     async function fetchKeys() {
       try {
