@@ -1,0 +1,439 @@
+     Running BeforeDevCommand (`pnpm dev`)
+        Info Watching /home/knightfall/Project/porttype-script/okay2/sshgo/src-tauri for changes...
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.40s
+
+(sshgo:534946): Gtk-WARNING **: 11:15:06.855: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:534946): WARNING **: 11:15:07.066: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+
+(WebKitWebProcess:534979): Gtk-WARNING **: 11:15:07.206: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+(WebKitWebProcess:534979): Gtk-WARNING **: 11:15:07.322: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.35s
+
+(sshgo:535095): Gtk-WARNING **: 11:15:08.275: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.36s
+
+(sshgo:535111): Gtk-WARNING **: 11:15:08.937: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535111): WARNING **: 11:15:09.155: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+
+(WebKitWebProcess:535144): Gtk-WARNING **: 11:15:09.294: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (WebKitWebProcess:535144): ERROR **: 11:15:09.345: sendPIDToPeer: Failed to send pid: Broken pipe
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.31s
+
+(sshgo:535160): Gtk-WARNING **: 11:15:09.840: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535160): WARNING **: 11:15:10.060: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+
+(WebKitWebProcess:535202): Gtk-WARNING **: 11:15:10.206: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (WebKitWebProcess:535202): ERROR **: 11:15:10.255: sendPIDToPeer: Failed to send pid: Broken pipe
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.34s
+
+(sshgo:535216): Gtk-WARNING **: 11:15:10.762: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535216): WARNING **: 11:15:10.978: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+
+(WebKitWebProcess:535261): Gtk-WARNING **: 11:15:11.130: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (WebKitWebProcess:535261): ERROR **: 11:15:11.180: sendPIDToPeer: Failed to send pid: Broken pipe
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.31s
+
+(sshgo:535275): Gtk-WARNING **: 11:15:11.641: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535275): WARNING **: 11:15:11.857: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+
+(WebKitWebProcess:535317): Gtk-WARNING **: 11:15:12.004: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (WebKitWebProcess:535317): ERROR **: 11:15:12.053: sendPIDToPeer: Failed to send pid: Broken pipe
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.32s
+
+(sshgo:535331): Gtk-WARNING **: 11:15:12.526: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535331): WARNING **: 11:15:12.698: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+
+(WebKitWebProcess:535372): Gtk-WARNING **: 11:15:12.803: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+
+(WebKitWebProcess:535372): Gtk-WARNING **: 11:15:12.890: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.22s
+
+(sshgo:535412): Gtk-WARNING **: 11:15:13.256: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535412): WARNING **: 11:15:13.390: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+
+(WebKitWebProcess:535445): Gtk-WARNING **: 11:15:13.471: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+(WebKitWebProcess:535445): Gtk-WARNING **: 11:15:13.540: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.18s
+
+(sshgo:535557): Gtk-WARNING **: 11:15:14.139: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+** (sshgo:535557): WARNING **: 11:15:14.261: webkit_settings_set_enable_offline_web_application_cache is deprecated and does nothing.
+
+(WebKitWebProcess:535590): Gtk-WARNING **: 11:15:14.338: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+
+(WebKitWebProcess:535590): Gtk-WARNING **: 11:15:14.405: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class
+        Info File src-tauri/src/error.txt changed. Rebuilding application...
+[0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::Path`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/ssh.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::Path;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:25:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection_command(connection: String) -> Result<(), String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections_command` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/commands.rs:30:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections_command() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `save_connection` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:4:8[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn save_connection(connection: String) -> Result<(), String> {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+
+[0m[1m[33mwarning[0m[0m[1m: function `load_connections` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/file.rs:19:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn load_connections() -> Result<Vec<String>, String> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m:[0m `sshgo` (bin "sshgo") generated 5 warnings (run `cargo fix --bin "sshgo"` to apply 1 suggestion)
+[1m[32m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 0.18s
+
+(sshgo:535697): Gtk-WARNING **: 11:15:14.878: Theme parsing error: gtk-dark.css:6691:68: Invalid name of pseudo-class

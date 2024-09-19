@@ -39,16 +39,12 @@ pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     };
 
     let private_key_path = ssh_dir.join(key_name);
-    let public_key_path = ssh_dir.join(format!("{}.pub", key_name));
-
-    // Delete the private key if it exists
+    let public_key_path = ssh_dir.join(format!("{}.pub", key_name)); 
     if private_key_path.exists() {
         fs::remove_file(private_key_path).map_err(|e| e.to_string())?;
     } else {
         return Err("Private key file does not exist".into());
-    }
-
-    // Delete the corresponding public key if it exists
+    } 
     if public_key_path.exists() {
         fs::remove_file(public_key_path).map_err(|e| e.to_string())?;
     }
