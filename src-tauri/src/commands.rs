@@ -1,4 +1,4 @@
-use crate::file::{load_connections, save_connection};
+use crate::file::{load_connections, save_connection, generate_keys_with_filename, check_ssh_keys,add_ca_key };
 use crate::ssh::{connect_ssh, generate_keys, password_auth, secure_copy};
 
 #[tauri::command]
@@ -30,3 +30,20 @@ pub fn save_connection_command(connection: String) -> Result<(), String> {
 pub fn load_connections_command() -> Result<Vec<String>, String> {
     load_connections()
 }
+
+#[tauri::command]
+pub fn generate_keys_with_filename_command(algorithm: &str, password: &str, filename: &str, overwrite: bool) -> Result<i32, String> {
+    generate_keys_with_filename(algorithm, password, filename, overwrite)
+}
+
+#[tauri::command]
+pub fn check_ssh_keys_command() -> Result<Vec<String>, String> {
+    check_ssh_keys()
+}
+
+#[tauri::command]
+pub fn add_ca_key_command(file_content: String) -> Result<i32, String> {
+    add_ca_key(file_content)
+}
+
+

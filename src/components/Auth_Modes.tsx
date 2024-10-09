@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/tabs"
 import { Certificate_Authentication } from "@/pages/Certificate_Authentication";
 import { Connect_SSH } from "@/pages/Connect_SSH";
+import  ManageKeys  from "@/pages/manage_keys";
 
 
 function Auth_Modes() {
@@ -18,7 +19,7 @@ function Auth_Modes() {
         <TabsTrigger value="certificate_auth">Certificate Authentication</TabsTrigger>
       </TabsList>
       <TabsContent value="manage_keys">
-        Manage Keys
+        <ManageKeys />
       </TabsContent>
       <TabsContent value="connect_ssh" className="flex justify-center items-center">
         <Connect_SSH />
