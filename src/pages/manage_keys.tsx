@@ -14,7 +14,7 @@ const ManageKeys: React.FC = () => {
   const [caKeyFile, setCaKeyFile] = useState<File | null>(null);
   const [caKeyFileName, setCaKeyFileName] = useState<string>("");
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
-  const [role, setRole] = useState<string>("user"); // State for role selection
+  const [role, setRole] = useState<string>("user"); 
 
   const handleGenerateKeys = async () => {
     if (filename === "") {
@@ -41,7 +41,7 @@ const ManageKeys: React.FC = () => {
         resetState();
       } else if (result === -1) {
         setShowModal(true);
-        setModalError(""); // Clear modal error on first open
+        setModalError("");
       } else {
         setMessage("Error generating keys.");
       }
@@ -93,9 +93,9 @@ const ManageKeys: React.FC = () => {
 
     try {
       const result = await invoke("add_ca_key_command", {
-        role, // Send the selected role
+        role, 
         fileContent: await caKeyFile.text(),
-        filename: caKeyFileName, // Send the CA key file name
+        filename: caKeyFileName, 
       });
 
       if (result === 1) {
@@ -139,7 +139,6 @@ const ManageKeys: React.FC = () => {
   return (
     <div className="relative h-screen">
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
-        {/* Key Generation Section */}
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
             <label className="text-lg font-bold mb-2">File Name</label>
@@ -187,7 +186,6 @@ const ManageKeys: React.FC = () => {
           </Button>
         </div>
 
-        {/* Role Selection Toggle */}
         <div className="flex justify-center mb-4">
           <label className="text-lg font-bold mr-4">Role:</label>
           <Button
@@ -199,14 +197,12 @@ const ManageKeys: React.FC = () => {
           </Button>
         </div>
 
-        {/* CA Key Section */}
         <div style={{ position: 'absolute', bottom: '1/4rem', left: '1rem' }}>
           <Button onClick={() => setShowCaKeyModal(true)} className="bg-blue-500 text-white p-2 rounded" style={{ width: '200px', height: '50px' }}>
             Add CA Key File
           </Button>
         </div>
 
-        {/* Success or Error Message */}
         {message && (
           <div
             className={`mt-4 text-center ${
@@ -218,7 +214,6 @@ const ManageKeys: React.FC = () => {
         )}
       </div>
 
-      {/* Modal for adding CA Key */}
       {showCaKeyModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
           <div className="bg-black text-white p-6 rounded-lg shadow-lg w-96">
@@ -257,7 +252,6 @@ const ManageKeys: React.FC = () => {
         </div>
       )}
 
-      {/* Modal for existing file name error */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
           <div className="bg-black text-white p-6 rounded-lg shadow-lg w-96">

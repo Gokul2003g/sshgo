@@ -105,7 +105,6 @@ pub fn load_connections() -> Result<Vec<String>, String> {
 pub fn add_ca_key(file_content: String, filename: String, role: String) -> Result<i32, String> {
     match role.as_str() {
         "user" => {
-            // Handle user role - Add file content to ~/.ssh/ssh_known_hosts
             let ssh_dir = dirs::home_dir().map(|d| d.join(".ssh")).unwrap();
             if !ssh_dir.exists() {
                 fs::create_dir_all(&ssh_dir).map_err(|_| "Failed to create .ssh directory.")?;
@@ -118,18 +117,16 @@ pub fn add_ca_key(file_content: String, filename: String, role: String) -> Resul
                 .append(true)
                 .open(&known_hosts_path)
                 .map_err(|_| "Failed to open known_hosts file.")?;
-            file.write_all(format!("@cert-authority *\n{}", file_content).as_bytes())
+            file.write_all(format!("@cert-authority * {}", file_content).as_bytes())
                 .map_err(|_| "Failed to write to known_hosts file.")?;
 
-            Ok(1) // Successfully added content
+            Ok(1) 
         }
         "host" => {
-            // Handle host role - Append TrustedUserCAKeys to /etc/ssh/sshd_config and create trusted_keys file
             let trusted_keys_dir = Path::new("/etc/ssh/trusted_keys");
             let sshd_config_path = Path::new("/etc/ssh/sshd_config");
             let filename_basename = Path::new(&filename).file_name().unwrap().to_str().unwrap();
 
-            // Step 1: Create trusted_keys directory if it doesn't exist and append to sshd_config
             let combined_command = format!(
                 "sudo mkdir -p {} && sudo sh -c 'touch {} && echo \"{}\" > {}' && sudo sh -c 'echo \"TrustedUserCAKeys {}/{}\" >> {}' && exit",
                 trusted_keys_dir.display(),
@@ -150,7 +147,7 @@ pub fn add_ca_key(file_content: String, filename: String, role: String) -> Resul
 
             if let Ok(mut child) = result_combined {
                 child.wait().expect("Failed to wait for combined command");
-                Ok(1) // Successfully executed the combined command
+                Ok(1) 
             } else {
                 Err("Failed to launch terminal for combined command".to_string())
             }
