@@ -17,7 +17,7 @@ fn main() {
         commands::secure_copy_command,
         commands::save_connection_command,
         commands::load_connections_command,
-        commands::add_ca_key_command 
+        commands::add_ca_key_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

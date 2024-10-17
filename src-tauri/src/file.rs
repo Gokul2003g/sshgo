@@ -1,7 +1,7 @@
 use std::fs::{self, File, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
 use std::process::Command;
-
+use std::path::Path;
 pub fn generate_keys_with_filename(algorithm: &str, password: &str, filename: &str, overwrite: bool) -> Result<i32, String> {
     let home_dir = dirs::home_dir().ok_or("Could not find home directory")?;
     let ssh_dir = home_dir.join(".ssh");
@@ -102,25 +102,61 @@ pub fn load_connections() -> Result<Vec<String>, String> {
 
     Ok(connections)
 }
-pub fn add_ca_key(file_content: String) -> Result<i32, String> {
-    let home_dir = dirs::home_dir().ok_or("Could not find home directory")?;
-    let known_hosts_path = home_dir.join(".ssh").join("ssh_known_hosts");
+pub fn add_ca_key(file_content: String, filename: String, role: String) -> Result<i32, String> {
+    match role.as_str() {
+        "user" => {
+            // Handle user role - Add file content to ~/.ssh/ssh_known_hosts
+            let ssh_dir = dirs::home_dir().map(|d| d.join(".ssh")).unwrap();
+            if !ssh_dir.exists() {
+                fs::create_dir_all(&ssh_dir).map_err(|_| "Failed to create .ssh directory.")?;
+            }
 
-    let entry = format!("@cert-authority * {}\n", file_content);
+            let known_hosts_path = ssh_dir.join("ssh_known_hosts");
+            let mut file = OpenOptions::new()
+                .create(true)
+                .write(true)
+                .append(true)
+                .open(&known_hosts_path)
+                .map_err(|_| "Failed to open known_hosts file.")?;
+            file.write_all(format!("@cert-authority *\n{}", file_content).as_bytes())
+                .map_err(|_| "Failed to write to known_hosts file.")?;
 
-    // Open the file in append mode or create it if it doesn't exist
-    let mut file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(known_hosts_path)
-        .map_err(|e| format!("Error opening file: {}", e))?;
+            Ok(1) // Successfully added content
+        }
+        "host" => {
+            // Handle host role - Append TrustedUserCAKeys to /etc/ssh/sshd_config and create trusted_keys file
+            let trusted_keys_dir = Path::new("/etc/ssh/trusted_keys");
+            let sshd_config_path = Path::new("/etc/ssh/sshd_config");
+            let filename_basename = Path::new(&filename).file_name().unwrap().to_str().unwrap();
 
-    // Write the CA key entry to the file
-    file.write_all(entry.as_bytes())
-        .map_err(|e| format!("Error writing to file: {}", e))?;
+            // Step 1: Create trusted_keys directory if it doesn't exist and append to sshd_config
+            let combined_command = format!(
+                "sudo mkdir -p {} && sudo sh -c 'touch {} && echo \"{}\" > {}' && sudo sh -c 'echo \"TrustedUserCAKeys {}/{}\" >> {}' && exit",
+                trusted_keys_dir.display(),
+                trusted_keys_dir.join(filename_basename).display(),
+                file_content,
+                trusted_keys_dir.join(filename_basename).display(),
+                trusted_keys_dir.display(),
+                filename_basename,
+                sshd_config_path.display()
+            );
 
-    Ok(1)
+            let result_combined = Command::new("kitty")
+                .arg("-e")
+                .arg("bash")
+                .arg("-c")
+                .arg(combined_command)
+                .spawn();
+
+            if let Ok(mut child) = result_combined {
+                child.wait().expect("Failed to wait for combined command");
+                Ok(1) // Successfully executed the combined command
+            } else {
+                Err("Failed to launch terminal for combined command".to_string())
+            }
+        }
+        _ => Err("Invalid role. Use 'user' or 'host'.".to_string()),
+    }
 }
-
 
 
