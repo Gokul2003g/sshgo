@@ -36,8 +36,8 @@ export const Certificate_Authentication = () => {
     defaultValues: {
       public_key: "",
       is_host: false,
-      identity: "",
-      provider: "",
+      identity: "gokul2003g@gmail.com",
+      provider: "google",
     },
   });
 
@@ -50,7 +50,7 @@ export const Certificate_Authentication = () => {
     // values.identity = userEmail || "not_set";
     // values.provider = session.data.provider;
 
-    const token = "";
+    const token = "hardcodedToken";
     try {
       const response = await axios.post(SERVER_URI + "handle-post/", values, {
         headers: {
