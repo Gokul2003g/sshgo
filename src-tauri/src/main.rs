@@ -9,16 +9,22 @@ mod ssh;
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-        commands::password_auth_command,
-        commands::generate_keys_with_filename_command,
-        commands::generate_keys_command,
-        commands::connect_ssh_command,
-        commands::check_ssh_keys_command,
-        commands::secure_copy_command,
-        commands::save_connection_command,
-        commands::load_connections_command,
-        commands::add_ca_key_command
+            // From your teammate's code
+            commands::password_auth_command,
+            commands::generate_keys_with_filename_command,
+            commands::generate_keys_command,
+            commands::connect_ssh_command,
+            commands::check_ssh_keys_command,
+            commands::secure_copy_command,
+            commands::save_connection_command,
+            commands::load_connections_command,
+            commands::add_ca_key_command,
+            
+            // From your code (new commands added)
+            commands::list_ssh_keys_command,
+            commands::delete_ssh_key_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
