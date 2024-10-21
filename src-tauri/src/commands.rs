@@ -1,5 +1,9 @@
-use crate::file::{add_ca_key,load_connections, save_connection, generate_keys_with_filename,check_ssh_keys};
-use crate::ssh::{connect_ssh, generate_keys, password_auth, secure_copy};
+use crate::file::{
+    add_ca_key, load_connections, save_connection, generate_keys_with_filename, check_ssh_keys,
+};
+use crate::ssh::{
+    connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
+};
 
 #[tauri::command]
 pub fn password_auth_command(username: &str) {
@@ -32,7 +36,12 @@ pub fn load_connections_command() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-pub fn generate_keys_with_filename_command(algorithm: &str, password: &str, filename: &str, overwrite: bool) -> Result<i32, String> {
+pub fn generate_keys_with_filename_command(
+    algorithm: &str,
+    password: &str,
+    filename: &str,
+    overwrite: bool,
+) -> Result<i32, String> {
     generate_keys_with_filename(algorithm, password, filename, overwrite)
 }
 
@@ -42,7 +51,21 @@ pub fn check_ssh_keys_command() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-pub fn add_ca_key_command(file_content: String, filename: String,role:String) -> Result<i32, String> {
+pub fn add_ca_key_command(file_content: String, filename: String, role: String) -> Result<i32, String> {
     add_ca_key(file_content, filename, role)
 }
+
+#[tauri::command]
+pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
+    match list_ssh_keys() {
+        Ok(keys) => Ok(keys),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
+    delete_ssh_key(key_name)
+}
+
 

@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api/tauri";
+
 const ManageKeys: React.FC = () => {
+  const [keys, setKeys] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [filename, setFilename] = useState<string>("");
   const [algorithm, setAlgorithm] = useState<string>("choose");
   const [password, setPassword] = useState<string>("");
@@ -15,6 +19,40 @@ const ManageKeys: React.FC = () => {
   const [caKeyFileName, setCaKeyFileName] = useState<string>("");
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
   const [role, setRole] = useState<string>("user"); 
+
+  useEffect(() => {
+    async function fetchKeys() {
+      try {
+        const fetchedKeys: string[] = await invoke('list_ssh_keys_command');
+        setKeys(fetchedKeys);
+      } catch (error) {
+        console.error('Error fetching keys:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchKeys();
+  }, []);
+
+  const handleDelete = (keyName: string) => {
+    setConfirmDelete(keyName);
+  };
+
+  const confirmDeletion = async () => {
+    if (confirmDelete) {
+      try {
+        await invoke('delete_ssh_key_command', { keyName: confirmDelete });
+        setKeys((prevKeys) => prevKeys.filter((key) => key !== confirmDelete));
+        setConfirmDelete(null);
+      } catch (error) {
+        console.error('Error deleting key:', error);
+      }
+    }
+  };
+
+  const cancelDeletion = () => {
+    setConfirmDelete(null);
+  };
 
   const handleGenerateKeys = async () => {
     if (filename === "") {
@@ -35,7 +73,8 @@ const ManageKeys: React.FC = () => {
         overwrite,
       });
 
-      if (result === 1) {
+      if (result === 1) { 
+        setKeys((prevKeys) => [...prevKeys, filename]);
         setMessage(`Key generated successfully! Filename: ${filename}`);
         setShowModal(false);
         resetState();
@@ -66,6 +105,7 @@ const ManageKeys: React.FC = () => {
       });
 
       if (result === 1) {
+        setKeys((prevKeys) => [...prevKeys, newFilename]);
         setMessage(`Key generated successfully! Filename: ${newFilename}`);
         setShowModal(false);
         resetState();
@@ -136,14 +176,16 @@ const ManageKeys: React.FC = () => {
     setCaKeyFileName("");
   };
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className="relative h-screen">
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">File Name</label>
+            <label className="text-lg font-bold mb-2 text-xl">File Name</label> 
             <Input
-              className="p-2 border rounded"
+              className="p-2 border rounded text-lg"
               value={filename}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilename(e.target.value)}
               placeholder="Enter key file name"
@@ -151,11 +193,11 @@ const ManageKeys: React.FC = () => {
             />
           </div>
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">Algorithm</label>
+            <label className="text-lg font-bold mb-2 text-xl">Algorithm</label> 
             <select
               value={algorithm}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAlgorithm(e.target.value)}
-              className="p-2 border rounded bg-white text-black"
+              className="p-2 border rounded bg-white text-black text-lg"
               style={{ width: '150px', height: '50px' }}
             >
               <option value="choose">Choose</option>
@@ -169,108 +211,129 @@ const ManageKeys: React.FC = () => {
 
         <div className="text-center mb-4">
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">Password</label>
+            <label className="text-lg font-bold mb-2 text-xl">Password</label>
             <Input
               type="password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               placeholder="Enter password"
+              className="text-lg" 
               style={{ width: '200px' }}
             />
           </div>
         </div>
 
         <div className="flex justify-center mb-4">
-          <Button onClick={handleGenerateKeys} className="bg-blue-500 text-white p-2 rounded" style={{ width: '200px', height: '50px' }}>
+          <Button onClick={handleGenerateKeys} className="bg-blue-500 text-white p-2 rounded text-lg" style={{ width: '200px', height: '50px' }}>
             Generate Keys
           </Button>
         </div>
 
         <div className="flex justify-center mb-4">
-          <label className="text-lg font-bold mr-4">Role:</label>
+          <label className="text-lg font-bold mr-4 text-xl">Role:</label>
           <Button
             onClick={() => setRole(role === "user" ? "host" : "user")}
-            className={`p-2 rounded ${role === "user" ? "bg-blue-500 text-white" : "bg-gray-600 text-white"}`}
+            className={`p-2 rounded ${role === "user" ? "bg-blue-500 text-white" : "bg-gray-600 text-white"} text-lg`}
             style={{ width: '100px' }}
           >
             {role.charAt(0).toUpperCase() + role.slice(1)}
           </Button>
         </div>
-
-        <div style={{ position: 'absolute', bottom: '1/4rem', left: '1rem' }}>
-          <Button onClick={() => setShowCaKeyModal(true)} className="bg-blue-500 text-white p-2 rounded" style={{ width: '200px', height: '50px' }}>
+        <div className="flex justify-center mb-4"> 
+          <Button onClick={() => setShowCaKeyModal(true)} className="bg-blue-500 text-white p-2 rounded text-lg" style={{ width: '200px', height: '50px' }}> 
             Add CA Key File
           </Button>
         </div>
 
         {message && (
           <div
-            className={`mt-4 text-center ${
-              message.includes("Please") ? "text-red-500" : "text-green-500"
-            }`}
+            className={`mt-2 ${
+              message.includes("successfully") ? "text-green-500" : "text-red-500"
+            } text-lg`}
           >
             {message}
           </div>
         )}
+
+        <h2 className="text-xl font-bold mt-6">SSH Keys</h2> 
+        <ul className="list-disc ml-5 mt-2">
+          {keys.length === 0 ? (
+            <li className="text-lg">No SSH keys found.</li>
+          ) : (
+            keys.map((key) => (
+              <li key={key} className="flex justify-between items-center my-2 text-lg">
+                {key}
+                <Button
+                  onClick={() => handleDelete(key)}
+                  className="ml-4 bg-red-500 text-white p-1 rounded"
+                >
+                  Delete
+                </Button>
+              </li>
+            ))
+          )}
+        </ul>
+
+        {confirmDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg">
+              <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+              <p>Are you sure you want to delete the key: {confirmDelete}?</p>
+              <div className="mt-4 flex justify-end">
+                <Button onClick={cancelDeletion} className="bg-gray-300 text-black p-2 rounded mr-2">
+                  Cancel
+                </Button>
+                <Button onClick={confirmDeletion} className="bg-red-500 text-white p-2 rounded">
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {showCaKeyModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-          <div className="bg-black text-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add CA Key</h2>
-            <div className="flex flex-col mb-4">
-              <button
-                onClick={handleFileSelect}
-                className="bg-blue-500 text-white p-2 rounded mb-2"
-                style={{ width: '100%' }}
-              >
-                Select CA Key File
-              </button>
-              {caKeyFileName && (
-                <span className="text-gray-300">{caKeyFileName}</span>
-              )}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Generate Keys</h2>
+            <p>{modalError && <span className="text-red-500">{modalError}</span>}</p>
+            <div className="mb-4">
+              <label className="font-bold text-xl">New File Name</label> 
+              <Input
+                value={newFilename}
+                onChange={(e) => setNewFilename(e.target.value)}
+                placeholder="Enter new file name"
+                className="text-lg" 
+              />
             </div>
-            <div className="flex justify-center">
-              <Button
-                onClick={handleAddCAKey}
-                className="bg-blue-500 text-white p-2 rounded"
-                style={{ width: '100%' }}
-              >
-                Add Key
+            <div className="flex justify-end">
+              <Button onClick={handleReEnterFileName} className="bg-blue-500 text-white p-2 rounded mr-2 text-lg">
+                Generate
               </Button>
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button
-                onClick={() => setShowCaKeyModal(false)}
-                className="bg-red-500 text-white p-2 rounded"
-                style={{ width: '100%' }}
-              >
-                Close
+              <Button onClick={() => setShowModal(false)} className="bg-gray-300 text-black p-2 rounded text-lg">
+                Cancel
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-          <div className="bg-black text-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">File Name Exists</h2>
-            <p className="mb-4">The file name already exists. Please enter a new one:</p>
-            <Input
-              className="p-2 border rounded mb-4"
-              value={newFilename}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewFilename(e.target.value)}
-              placeholder="Enter new file name"
-              style={{ width: '100%' }}
-            />
-            {modalError && <p className="text-red-500 mb-2">{modalError}</p>}
-            <div className="flex justify-between">
-              <Button onClick={handleReEnterFileName} className="bg-blue-500 text-white p-2 rounded" style={{ width: '100px' }}>
-                Confirm
+      {showCaKeyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Add CA Key File</h2>
+            <div className="mb-4">
+              <Button onClick={handleFileSelect} className="bg-blue-500 text-white p-2 rounded text-lg">
+                Select CA Key File
               </Button>
-              <Button onClick={handleOverwrite} className="bg-green-500 text-white p-2 rounded" style={{ width: '100px' }}>
-                Overwrite
+              {caKeyFileName && <span className="ml-2 text-lg">{caKeyFileName}</span>}
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={handleAddCAKey} className="bg-blue-500 text-white p-2 rounded mr-2 text-lg">
+                Add Key
+              </Button>
+              <Button onClick={() => setShowCaKeyModal(false)} className="bg-gray-300 text-black p-2 rounded text-lg">
+                Cancel
               </Button>
             </div>
           </div>
@@ -281,4 +344,5 @@ const ManageKeys: React.FC = () => {
 };
 
 export default ManageKeys;
+
 
