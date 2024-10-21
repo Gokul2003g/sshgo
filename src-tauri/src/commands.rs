@@ -55,7 +55,6 @@ pub fn add_ca_key_command(file_content: String, filename: String, role: String) 
     add_ca_key(file_content, filename, role)
 }
 
-// Your additional SSH key management commands
 #[tauri::command]
 pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
     match list_ssh_keys() {

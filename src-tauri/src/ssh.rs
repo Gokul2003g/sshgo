@@ -4,7 +4,6 @@ use std::path::Path;
 use std::io;
 use dirs;
 
-// Function to list SSH keys
 pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
     let ssh_dir = dirs::home_dir().unwrap().join(".ssh");
     let mut private_keys = Vec::new();
@@ -33,7 +32,6 @@ pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
     Ok(private_keys)
 }
 
-// Function to delete a specific SSH key
 pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     let ssh_dir = match dirs::home_dir() {
         Some(path) => path.join(".ssh"),
@@ -54,7 +52,6 @@ pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     Ok(())
 }
 
-// Function for password-based authentication
 pub fn password_auth(username: &str) {
     match Command::new("sh")
         .arg("-c")
@@ -69,7 +66,6 @@ pub fn password_auth(username: &str) {
     }
 }
 
-// Function to generate SSH keys
 pub fn generate_keys(algorithm: &str, password: &str) {
     let username = whoami::username();
     let output = Command::new("ssh-keygen")
@@ -100,7 +96,6 @@ pub fn generate_keys(algorithm: &str, password: &str) {
     }
 }
 
-// Function to securely copy SSH keys
 pub fn secure_copy(address: &str) {
     match Command::new("sh")
         .arg("-c")
@@ -115,7 +110,6 @@ pub fn secure_copy(address: &str) {
     }
 }
 
-// Function to connect via SSH
 pub fn connect_ssh(username: &str) {
     match Command::new("sh")
         .arg("-c")
