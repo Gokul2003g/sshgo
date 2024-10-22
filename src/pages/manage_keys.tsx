@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const ManageKeys: React.FC = () => {
-  // Teammate's state variables
   const [filename, setFilename] = useState<string>("");
   const [algorithm, setAlgorithm] = useState<string>("choose");
   const [password, setPassword] = useState<string>("");
@@ -17,8 +16,6 @@ const ManageKeys: React.FC = () => {
   const [caKeyFileName, setCaKeyFileName] = useState<string>("");
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
   const [role, setRole] = useState<string>("user");
-
-  // User's state variables
   const [keys, setKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -39,7 +36,6 @@ const ManageKeys: React.FC = () => {
     fetchKeys();
   }, []);
 
-  // Teammate's functions
   const handleGenerateKeys = async () => {
     if (filename === "") {
       setMessage("Please enter a file name for the key.");
@@ -206,13 +202,11 @@ const ManageKeys: React.FC = () => {
     setRenamedKey("");
   };
 
-  // Render loading state or main UI
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="relative h-screen">
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
-        {/* Teammate's implementation */}
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
             <label className="text-lg font-bold mb-2">File Name</label>
@@ -236,7 +230,6 @@ const ManageKeys: React.FC = () => {
               <option value="rsa">RSA</option>
               <option value="ecdsa">ECDSA</option>
               <option value="ed25519">ED25519</option>
-              <option value="dsa">DSA</option>
             </select>
           </div>
         </div>
@@ -262,8 +255,6 @@ const ManageKeys: React.FC = () => {
             Add CA Key
           </Button>
         </div>
-
-        {/* Keys list */}
         <h2 className="text-lg font-bold mb-2">Existing Keys</h2>
         <ul className="list-disc list-inside">
           {keys.map((key) => (
@@ -277,14 +268,16 @@ const ManageKeys: React.FC = () => {
                   Delete
                 </Button>
               </div>
-            </li>
+            </li> 
           ))}
-        </ul>
+          {/* Messages */}
+        {message && <p className="text-green-500 mt-4">{message}</p>}
+        {modalError && <p className="text-red-500 mt-4">{modalError}</p>}
+        </ul> 
 
-        {/* Confirm Delete Modal */}
         {confirmDelete && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80">
+            <div className="bg-black p-4 rounded shadow-lg">
               <h3 className="text-lg font-bold mb-2">Confirm Deletion</h3>
               <p>Are you sure you want to delete {confirmDelete}?</p>
               <div className="flex justify-end space-x-2 mt-4">
@@ -295,10 +288,9 @@ const ManageKeys: React.FC = () => {
           </div>
         )}
 
-        {/* Rename Key Modal */}
         {keyToRename && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80">
+            <div className="bg-black p-4 rounded shadow-lg">
               <h3 className="text-lg font-bold mb-2">Rename Key</h3>
               <Input
                 value={renamedKey}
@@ -314,18 +306,17 @@ const ManageKeys: React.FC = () => {
           </div>
         )}
 
-        {/* Teammate's Add CA Key Modal */}
         {showCaKeyModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80">
             <div className="bg-blue p-4 rounded shadow-lg">
               <h3 className="text-lg font-bold mb-2">Add CA Key</h3>
               <Button onClick={handleFileSelect} className="bg-blue-500 text-white p-2 rounded mb-4">
                 Select CA Key File
               </Button>
               <p>{caKeyFileName}</p>
-              <div className="flex justify-between mb-4">
+              <div className="bg-black flex justify-between mb-4">
                 <label className="mr-2">Role:</label>
-                <select value={role} onChange={(e) => setRole(e.target.value)} className="border rounded">
+                <select value={role} onChange={(e) => setRole(e.target.value)} className="bg-black border rounded">
                   <option className="bg-black" value="user">User</option>
                   <option className="bg-black" value="host">Host</option>
                 </select>
@@ -336,11 +327,7 @@ const ManageKeys: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
-
-        {/* Messages */}
-        {message && <p className="text-red-500 mt-4">{message}</p>}
-        {modalError && <p className="text-red-500 mt-4">{modalError}</p>}
+        )} 
       </div>
     </div>
   );
