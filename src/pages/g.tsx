@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const ManageKeys: React.FC = () => {
-  // Teammate's state variables
   const [filename, setFilename] = useState<string>("");
   const [algorithm, setAlgorithm] = useState<string>("choose");
   const [password, setPassword] = useState<string>("");
@@ -18,7 +17,6 @@ const ManageKeys: React.FC = () => {
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
   const [role, setRole] = useState<string>("user");
 
-  // User's state variables
   const [keys, setKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -39,7 +37,6 @@ const ManageKeys: React.FC = () => {
     fetchKeys();
   }, []);
 
-  // Teammate's functions
   const handleGenerateKeys = async () => {
     if (filename === "") {
       setMessage("Please enter a file name for the key.");
@@ -61,9 +58,11 @@ const ManageKeys: React.FC = () => {
 
       if (result === 1) {
         setMessage(`Key generated successfully! Filename: ${filename}`);
-        setKeys((prevKeys) => [...prevKeys, filename]);
         setShowModal(false);
         resetState();
+        // Fetch the keys again after generation
+        const fetchedKeys: string[] = await invoke('list_ssh_keys_command');
+        setKeys(fetchedKeys);
       } else if (result === -1) {
         setShowModal(true);
         setModalError("");
@@ -94,6 +93,9 @@ const ManageKeys: React.FC = () => {
         setMessage(`Key generated successfully! Filename: ${newFilename}`);
         setShowModal(false);
         resetState();
+        // Fetch the keys again after generation
+        const fetchedKeys: string[] = await invoke('list_ssh_keys_command');
+        setKeys(fetchedKeys);
       } else if (result === -1) {
         setModalError("New file name already exists. Please choose another name.");
       } else {
@@ -128,6 +130,9 @@ const ManageKeys: React.FC = () => {
         setCaKeyFile(null);
         setCaKeyFileName("");
         setShowCaKeyModal(false);
+        // Fetch the keys again after adding CA key
+        const fetchedKeys: string[] = await invoke('list_ssh_keys_command');
+        setKeys(fetchedKeys);
       } else {
         setMessage("Error adding CA key.");
       }
@@ -206,13 +211,11 @@ const ManageKeys: React.FC = () => {
     setRenamedKey("");
   };
 
-  // Render loading state or main UI
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="relative h-screen">
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
-        {/* Teammate's implementation */}
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
             <label className="text-lg font-bold mb-2">File Name</label>
@@ -255,92 +258,61 @@ const ManageKeys: React.FC = () => {
         </div>
 
         <div className="flex justify-center mb-4">
-          <Button onClick={handleGenerateKeys} className="bg-blue-500 text-white p-2 rounded" style={{ width: '200px', height: '50px' }}>
-            Generate Keys
-          </Button>
-          <Button onClick={() => setShowCaKeyModal(true)} className="bg-green-500 text-white p-2 rounded ml-4" style={{ width: '200px', height: '50px' }}>
-            Add CA Key
-          </Button>
+          <Button onClick={handleGenerateKeys          }>Generate Keys</Button>
         </div>
 
-        {/* Keys list */}
-        <h2 className="text-lg font-bold mb-2">Existing Keys</h2>
-        <ul className="list-disc list-inside">
-          {keys.map((key) => (
-            <li key={key} className="flex justify-between items-center mb-2">
-              <span>{key}</span>
-              <div>
-                <Button onClick={() => handleRenameKey(key)} className="bg-yellow-500 text-white p-1 rounded mr-2">
-                  Rename
-                </Button>
-                <Button onClick={() => setConfirmDelete(key)} className="bg-red-500 text-white p-1 rounded">
-                  Delete
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {message && <p className="text-red-500">{message}</p>}
 
-        {/* Confirm Delete Modal */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold mb-2">Existing Keys:</h2>
+          <ul>
+            {keys.length > 0 ? (
+              keys.map((key) => (
+                <li key={key} className="flex items-center justify-between mb-2">
+                  <span>{key}</span>
+                  <div>
+                    <Button onClick={() => handleRenameKey(key)} className="mr-2">Rename</Button>
+                    <Button onClick={() => setConfirmDelete(key)}>Delete</Button>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li>No keys available.</li>
+            )}
+          </ul>
+        </div>
+
+        {/* Modal for confirmation of deletion */}
         {confirmDelete && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Confirm Deletion</h3>
+            <div className="bg-white p-6 rounded shadow-lg">
               <p>Are you sure you want to delete {confirmDelete}?</p>
-              <div className="flex justify-end space-x-2 mt-4">
-                <Button onClick={confirmDeletion} className="bg-red-500 text-white p-2 rounded">Yes</Button>
-                <Button onClick={cancelDeletion} className="bg-gray-500 text-white p-2 rounded">No</Button>
+              <div className="flex justify-end mt-4">
+                <Button onClick={confirmDeletion} className="mr-2">Yes</Button>
+                <Button onClick={cancelDeletion}>No</Button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Rename Key Modal */}
+        {/* Modal for renaming keys */}
         {keyToRename && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Rename Key</h3>
+            <div className="bg-white p-6 rounded shadow-lg">
+              <label className="block mb-2">New Name:</label>
               <Input
                 value={renamedKey}
                 onChange={(e) => setRenamedKey(e.target.value)}
                 placeholder="Enter new key name"
-                className="border rounded p-2 mb-4"
+                className="mb-4"
               />
-              <div className="flex justify-end space-x-2">
-                <Button onClick={confirmRenameKey} className="bg-green-500 text-white p-2 rounded">Rename</Button>
-                <Button onClick={cancelRename} className="bg-gray-500 text-white p-2 rounded">Cancel</Button>
+              <div className="flex justify-end">
+                <Button onClick={confirmRenameKey} className="mr-2">Rename</Button>
+                <Button onClick={cancelRename}>Cancel</Button>
               </div>
             </div>
           </div>
         )}
-
-        {/* Teammate's Add CA Key Modal */}
-        {showCaKeyModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-blue p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Add CA Key</h3>
-              <Button onClick={handleFileSelect} className="bg-blue-500 text-white p-2 rounded mb-4">
-                Select CA Key File
-              </Button>
-              <p>{caKeyFileName}</p>
-              <div className="flex justify-between mb-4">
-                <label className="mr-2">Role:</label>
-                <select value={role} onChange={(e) => setRole(e.target.value)} className="border rounded">
-                  <option className="bg-black" value="user">User</option>
-                  <option className="bg-black" value="host">Host</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button onClick={handleAddCAKey} className="bg-green-500 text-white p-2 rounded">Add CA Key</Button>
-                <Button onClick={() => setShowCaKeyModal(false)} className="bg-gray-500 text-white p-2 rounded">Cancel</Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Messages */}
-        {message && <p className="text-red-500 mt-4">{message}</p>}
-        {modalError && <p className="text-red-500 mt-4">{modalError}</p>}
       </div>
     </div>
   );

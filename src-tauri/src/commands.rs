@@ -3,6 +3,7 @@ use crate::file::{
 };
 use crate::ssh::{
     connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
+    rename_ssh_key, // Import the new rename function
 };
 
 #[tauri::command]
@@ -68,4 +69,7 @@ pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
     delete_ssh_key(key_name)
 }
 
-
+#[tauri::command]
+pub fn rename_ssh_key_command(old_name: &str, new_name: &str) -> Result<(), String> {
+    rename_ssh_key(old_name, new_name)
+}

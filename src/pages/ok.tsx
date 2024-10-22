@@ -4,7 +4,9 @@ import { Input } from "@/components/ui/input";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const ManageKeys: React.FC = () => {
-  // Teammate's state variables
+  const [keys, setKeys] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [filename, setFilename] = useState<string>("");
   const [algorithm, setAlgorithm] = useState<string>("choose");
   const [password, setPassword] = useState<string>("");
@@ -17,11 +19,6 @@ const ManageKeys: React.FC = () => {
   const [caKeyFileName, setCaKeyFileName] = useState<string>("");
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
   const [role, setRole] = useState<string>("user");
-
-  // User's state variables
-  const [keys, setKeys] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [keyToRename, setKeyToRename] = useState<string | null>(null);
   const [renamedKey, setRenamedKey] = useState<string>("");
 
@@ -39,7 +36,28 @@ const ManageKeys: React.FC = () => {
     fetchKeys();
   }, []);
 
-  // Teammate's functions
+  const handleDelete = (keyName: string) => {
+    setConfirmDelete(keyName);
+  };
+
+  const confirmDeletion = async () => {
+    if (confirmDelete) {
+      try {
+        await invoke('delete_ssh_key_command', { keyName: confirmDelete });
+        setKeys((prevKeys) => prevKeys.filter((key) => key !== confirmDelete));
+        setConfirmDelete(null);
+        setMessage(`Key ${confirmDelete} deleted successfully.`);
+      } catch (error) {
+        console.error('Error deleting key:', error);
+        setMessage("Error deleting key.");
+      }
+    }
+  };
+
+  const cancelDeletion = () => {
+    setConfirmDelete(null);
+  };
+
   const handleGenerateKeys = async () => {
     if (filename === "") {
       setMessage("Please enter a file name for the key.");
@@ -60,8 +78,8 @@ const ManageKeys: React.FC = () => {
       });
 
       if (result === 1) {
-        setMessage(`Key generated successfully! Filename: ${filename}`);
         setKeys((prevKeys) => [...prevKeys, filename]);
+        setMessage(`Key generated successfully! Filename: ${filename}`);
         setShowModal(false);
         resetState();
       } else if (result === -1) {
@@ -91,6 +109,7 @@ const ManageKeys: React.FC = () => {
       });
 
       if (result === 1) {
+        setKeys((prevKeys) => [...prevKeys, newFilename]);
         setMessage(`Key generated successfully! Filename: ${newFilename}`);
         setShowModal(false);
         resetState();
@@ -151,34 +170,6 @@ const ManageKeys: React.FC = () => {
     input.click();
   };
 
-  const resetState = () => {
-    setFilename("");
-    setAlgorithm("choose");
-    setPassword("");
-    setOverwrite(false);
-    setNewFilename("");
-    setCaKeyFile(null);
-    setCaKeyFileName("");
-  };
-
-  const confirmDeletion = async () => {
-    if (confirmDelete) {
-      try {
-        await invoke('delete_ssh_key_command', { keyName: confirmDelete });
-        setKeys((prevKeys) => prevKeys.filter((key) => key !== confirmDelete));
-        setConfirmDelete(null);
-        setMessage(`Key ${confirmDelete} deleted successfully.`);
-      } catch (error) {
-        console.error('Error deleting key:', error);
-        setMessage("Error deleting key.");
-      }
-    }
-  };
-
-  const cancelDeletion = () => {
-    setConfirmDelete(null);
-  };
-
   const handleRenameKey = (keyName: string) => {
     setKeyToRename(keyName);
     setRenamedKey(keyName);
@@ -206,18 +197,27 @@ const ManageKeys: React.FC = () => {
     setRenamedKey("");
   };
 
-  // Render loading state or main UI
+  const resetState = () => {
+    setFilename("");
+    setAlgorithm("choose");
+    setPassword("");
+    setOverwrite(false);
+    setNewFilename("");
+    setCaKeyFile(null);
+    setCaKeyFileName("");
+    setMessage(""); // Reset the message state
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="relative h-screen">
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
-        {/* Teammate's implementation */}
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">File Name</label>
+            <label className="text-lg font-bold mb-2 text-xl">File Name</label>
             <Input
-              className="p-2 border rounded"
+              className="p-2 border rounded text-lg"
               value={filename}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilename(e.target.value)}
               placeholder="Enter key file name"
@@ -225,11 +225,11 @@ const ManageKeys: React.FC = () => {
             />
           </div>
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">Algorithm</label>
+            <label className="text-lg font-bold mb-2 text-xl">Algorithm</label>
             <select
               value={algorithm}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAlgorithm(e.target.value)}
-              className="p-2 border rounded bg-white text-black"
+              className="p-2 border rounded bg-white text-black text-lg"
               style={{ width: '150px', height: '50px' }}
             >
               <option value="choose">Choose</option>
@@ -243,53 +243,48 @@ const ManageKeys: React.FC = () => {
 
         <div className="text-center mb-4">
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2">Password</label>
+            <label className="text-lg font-bold mb-2 text-xl">Password</label>
             <Input
               type="password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               placeholder="Enter password"
+              className="text-lg"
               style={{ width: '200px' }}
             />
           </div>
         </div>
 
         <div className="flex justify-center mb-4">
-          <Button onClick={handleGenerateKeys} className="bg-blue-500 text-white p-2 rounded" style={{ width: '200px', height: '50px' }}>
-            Generate Keys
+          <Button onClick={handleGenerateKeys} className="bg-blue-500 text-white p-2 rounded text-lg">
+            Generate Key
           </Button>
-          <Button onClick={() => setShowCaKeyModal(true)} className="bg-green-500 text-white p-2 rounded ml-4" style={{ width: '200px', height: '50px' }}>
+          <Button onClick={handleOverwrite} className="bg-blue-500 text-white p-2 rounded text-lg ml-2">
+            Overwrite Key
+          </Button>
+          <Button onClick={() => setShowCaKeyModal(true)} className="bg-green-500 text-white p-2 rounded text-lg ml-2">
             Add CA Key
           </Button>
         </div>
 
-        {/* Keys list */}
-        <h2 className="text-lg font-bold mb-2">Existing Keys</h2>
-        <ul className="list-disc list-inside">
-          {keys.map((key) => (
-            <li key={key} className="flex justify-between items-center mb-2">
-              <span>{key}</span>
-              <div>
-                <Button onClick={() => handleRenameKey(key)} className="bg-yellow-500 text-white p-1 rounded mr-2">
-                  Rename
-                </Button>
-                <Button onClick={() => setConfirmDelete(key)} className="bg-red-500 text-white p-1 rounded">
-                  Delete
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {/* Success/Error Messages */}
+        {message && (
+          <div className={`p-2 mt-4 text-lg ${message.includes("successfully") ? "text-green-600" : "text-red-600"}`}>
+            {message}
+          </div>
+        )}
 
-        {/* Confirm Delete Modal */}
         {confirmDelete && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Confirm Deletion</h3>
+          <div className="flex justify-center mt-4">
+            <div className="bg-white p-4 border rounded shadow">
               <p>Are you sure you want to delete {confirmDelete}?</p>
-              <div className="flex justify-end space-x-2 mt-4">
-                <Button onClick={confirmDeletion} className="bg-red-500 text-white p-2 rounded">Yes</Button>
-                <Button onClick={cancelDeletion} className="bg-gray-500 text-white p-2 rounded">No</Button>
+              <div className="flex space-x-4 mt-4">
+                <Button onClick={confirmDeletion} className="bg-red-500 text-white p-2 rounded text-lg">
+                  Yes
+                </Button>
+                <Button onClick={cancelDeletion} className="bg-gray-300 text-black p-2 rounded text-lg">
+                  No
+                </Button>
               </div>
             </div>
           </div>
@@ -297,50 +292,93 @@ const ManageKeys: React.FC = () => {
 
         {/* Rename Key Modal */}
         {keyToRename && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Rename Key</h3>
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded shadow-md w-96">
+              <h2 className="text-lg font-bold mb-4">Rename Key</h2>
               <Input
                 value={renamedKey}
                 onChange={(e) => setRenamedKey(e.target.value)}
-                placeholder="Enter new key name"
-                className="border rounded p-2 mb-4"
+                placeholder="New filename"
+                className="mb-4 p-2 border rounded"
               />
-              <div className="flex justify-end space-x-2">
-                <Button onClick={confirmRenameKey} className="bg-green-500 text-white p-2 rounded">Rename</Button>
-                <Button onClick={cancelRename} className="bg-gray-500 text-white p-2 rounded">Cancel</Button>
+              <div className="flex justify-between">
+                <Button onClick={confirmRenameKey} className="bg-blue-500 text-white p-2 rounded">
+                  Confirm
+                </Button>
+                <Button onClick={cancelRename} className="bg-gray-300 text-black p-2 rounded">
+                  Cancel
+                </Button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Teammate's Add CA Key Modal */}
+        {/* Add CA Key Modal */}
         {showCaKeyModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-blue p-4 rounded shadow-lg">
-              <h3 className="text-lg font-bold mb-2">Add CA Key</h3>
-              <Button onClick={handleFileSelect} className="bg-blue-500 text-white p-2 rounded mb-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded shadow-md w-96">
+              <h2 className="text-lg font-bold mb-4">Add CA Key</h2>
+              <Button onClick={handleFileSelect} className="bg-blue-500 text-white p-2 rounded text-lg w-full mb-4">
                 Select CA Key File
               </Button>
-              <p>{caKeyFileName}</p>
-              <div className="flex justify-between mb-4">
-                <label className="mr-2">Role:</label>
-                <select value={role} onChange={(e) => setRole(e.target.value)} className="border rounded">
-                  <option className="bg-black" value="user">User</option>
-                  <option className="bg-black" value="host">Host</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button onClick={handleAddCAKey} className="bg-green-500 text-white p-2 rounded">Add CA Key</Button>
-                <Button onClick={() => setShowCaKeyModal(false)} className="bg-gray-500 text-white p-2 rounded">Cancel</Button>
-              </div>
+              {caKeyFile && (
+                <div>
+                  <p>Selected File: {caKeyFileName}</p>
+                  <Button onClick={handleAddCAKey} className="bg-blue-500 text-white p-2 rounded text-lg w-full mt-4">
+                    Add CA Key
+                  </Button>
+                </div>
+              )}
+              <Button onClick={() => setShowCaKeyModal(false)} className="bg-gray-300 text-black p-2 rounded text-lg w-full mt-4">
+                Close
+              </Button>
             </div>
           </div>
         )}
 
-        {/* Messages */}
-        {message && <p className="text-red-500 mt-4">{message}</p>}
-        {modalError && <p className="text-red-500 mt-4">{modalError}</p>}
+        {/* Modal for Key Generation Error */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded shadow-md w-96">
+              <h2 className="text-lg font-bold mb-4">Filename Already Exists</h2>
+              <p>Please enter a new filename:</p>
+              <Input
+                value={newFilename}
+                onChange={(e) => setNewFilename(e.target.value)}
+                placeholder="New filename"
+                className="mb-4 p-2 border rounded"
+              />
+              <div className="flex justify-between">
+                <Button onClick={handleReEnterFileName} className="bg-blue-500 text-white p-2 rounded">
+                  Confirm
+                </Button>
+                <Button onClick={() => setShowModal(false)} className="bg-gray-300 text-black p-2 rounded">
+                  Cancel
+                </Button>
+              </div>
+              {modalError && <p className="text-red-600 mt-2">{modalError}</p>}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Existing Keys:</h2>
+          <ul className="list-disc list-inside">
+            {keys.map((key) => (
+              <li key={key} className="flex justify-between items-center mb-2">
+                <span>{key}</span>
+                <div className="flex space-x-2">
+                  <Button onClick={() => handleRenameKey(key)} className="bg-blue-500 text-white p-1 rounded text-sm">
+                    Rename
+                  </Button>
+                  <Button onClick={() => handleDelete(key)} className="bg-red-500 text-white p-1 rounded text-sm">
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

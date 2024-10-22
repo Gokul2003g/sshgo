@@ -19,7 +19,8 @@ fn main() {
             commands::load_connections_command,
             commands::add_ca_key_command,
             commands::list_ssh_keys_command,
-            commands::delete_ssh_key_command
+            commands::delete_ssh_key_command,
+            commands::rename_ssh_key_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
