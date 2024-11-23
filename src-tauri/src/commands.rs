@@ -1,8 +1,8 @@
 use crate::file::{
-    add_ca_key, load_connections, save_connection, generate_keys_with_filename, check_ssh_keys,
+    add_ca_key, check_ssh_keys, generate_keys_with_filename, load_connections, save_connection,
 };
 use crate::ssh::{
-    connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
+    connect_ssh, delete_ssh_key, generate_keys, list_ssh_keys, password_auth, secure_copy,
 };
 
 #[tauri::command]
@@ -51,7 +51,11 @@ pub fn check_ssh_keys_command() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-pub fn add_ca_key_command(file_content: String, filename: String, role: String) -> Result<i32, String> {
+pub fn add_ca_key_command(
+    file_content: String,
+    filename: String,
+    role: String,
+) -> Result<i32, String> {
     add_ca_key(file_content, filename, role)
 }
 
@@ -67,5 +71,3 @@ pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
 pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
     delete_ssh_key(key_name)
 }
-
-

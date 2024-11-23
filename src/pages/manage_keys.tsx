@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 
 const ManageKeys: React.FC = () => {
   const [keys, setKeys] = useState<string[]>([]);
@@ -18,7 +18,7 @@ const ManageKeys: React.FC = () => {
   const [caKeyFile, setCaKeyFile] = useState<File | null>(null);
   const [caKeyFileName, setCaKeyFileName] = useState<string>("");
   const [showCaKeyModal, setShowCaKeyModal] = useState<boolean>(false);
-  const [role, setRole] = useState<string>("user"); 
+  const [role, setRole] = useState<string>("user");
 
   useEffect(() => {
     async function fetchKeys() {
@@ -73,7 +73,7 @@ const ManageKeys: React.FC = () => {
         overwrite,
       });
 
-      if (result === 1) { 
+      if (result === 1) {
         setKeys((prevKeys) => [...prevKeys, filename]);
         setMessage(`Key generated successfully! Filename: ${filename}`);
         setShowModal(false);
@@ -120,10 +120,10 @@ const ManageKeys: React.FC = () => {
     }
   };
 
-  const handleOverwrite = () => {
-    setOverwrite(true);
-    handleGenerateKeys();
-  };
+  //const handleOverwrite = () => {
+  //  setOverwrite(true);
+  //  handleGenerateKeys();
+  //};
 
   const handleAddCAKey = async () => {
     if (!caKeyFile) {
@@ -133,9 +133,9 @@ const ManageKeys: React.FC = () => {
 
     try {
       const result = await invoke("add_ca_key_command", {
-        role, 
+        role,
         fileContent: await caKeyFile.text(),
-        filename: caKeyFileName, 
+        filename: caKeyFileName,
       });
 
       if (result === 1) {
@@ -183,7 +183,7 @@ const ManageKeys: React.FC = () => {
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full max-w-2xl">
         <div className="flex items-center justify-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2 text-xl">File Name</label> 
+            <label className="text-lg font-bold mb-2 text-xl">File Name</label>
             <Input
               className="p-2 border rounded text-lg"
               value={filename}
@@ -193,7 +193,7 @@ const ManageKeys: React.FC = () => {
             />
           </div>
           <div className="flex flex-col items-center">
-            <label className="text-lg font-bold mb-2 text-xl">Algorithm</label> 
+            <label className="text-lg font-bold mb-2 text-xl">Algorithm</label>
             <select
               value={algorithm}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setAlgorithm(e.target.value)}
@@ -217,7 +217,7 @@ const ManageKeys: React.FC = () => {
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               placeholder="Enter password"
-              className="text-lg" 
+              className="text-lg"
               style={{ width: '200px' }}
             />
           </div>
@@ -239,23 +239,22 @@ const ManageKeys: React.FC = () => {
             {role.charAt(0).toUpperCase() + role.slice(1)}
           </Button>
         </div>
-        <div className="flex justify-center mb-4"> 
-          <Button onClick={() => setShowCaKeyModal(true)} className="bg-blue-500 text-white p-2 rounded text-lg" style={{ width: '200px', height: '50px' }}> 
+        <div className="flex justify-center mb-4">
+          <Button onClick={() => setShowCaKeyModal(true)} className="bg-blue-500 text-white p-2 rounded text-lg" style={{ width: '200px', height: '50px' }}>
             Add CA Key File
           </Button>
         </div>
 
         {message && (
           <div
-            className={`mt-2 ${
-              message.includes("successfully") ? "text-green-500" : "text-red-500"
-            } text-lg`}
+            className={`mt-2 ${message.includes("successfully") ? "text-green-500" : "text-red-500"
+              } text-lg`}
           >
             {message}
           </div>
         )}
 
-        <h2 className="text-xl font-bold mt-6">SSH Keys</h2> 
+        <h2 className="text-xl font-bold mt-6">SSH Keys</h2>
         <ul className="list-disc ml-5 mt-2">
           {keys.length === 0 ? (
             <li className="text-lg">No SSH keys found.</li>
@@ -298,12 +297,12 @@ const ManageKeys: React.FC = () => {
             <h2 className="text-lg font-bold mb-4">Generate Keys</h2>
             <p>{modalError && <span className="text-red-500">{modalError}</span>}</p>
             <div className="mb-4">
-              <label className="font-bold text-xl">New File Name</label> 
+              <label className="font-bold text-xl">New File Name</label>
               <Input
                 value={newFilename}
                 onChange={(e) => setNewFilename(e.target.value)}
                 placeholder="Enter new file name"
-                className="text-lg" 
+                className="text-lg"
               />
             </div>
             <div className="flex justify-end">

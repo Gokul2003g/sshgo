@@ -1,8 +1,13 @@
 use std::fs::{self, File, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
-use std::process::Command;
 use std::path::Path;
-pub fn generate_keys_with_filename(algorithm: &str, password: &str, filename: &str, overwrite: bool) -> Result<i32, String> {
+use std::process::Command;
+pub fn generate_keys_with_filename(
+    algorithm: &str,
+    password: &str,
+    filename: &str,
+    overwrite: bool,
+) -> Result<i32, String> {
     let home_dir = dirs::home_dir().ok_or("Could not find home directory")?;
     let ssh_dir = home_dir.join(".ssh");
     let path = ssh_dir.join(filename);
@@ -38,7 +43,10 @@ pub fn generate_keys_with_filename(algorithm: &str, password: &str, filename: &s
                     algorithm.to_uppercase(),
                     String::from_utf8_lossy(&output.stderr)
                 );
-                Err(format!("Error generating keys: {:?}", String::from_utf8_lossy(&output.stderr)))
+                Err(format!(
+                    "Error generating keys: {:?}",
+                    String::from_utf8_lossy(&output.stderr)
+                ))
             }
         }
         Err(e) => {
@@ -120,7 +128,7 @@ pub fn add_ca_key(file_content: String, filename: String, role: String) -> Resul
             file.write_all(format!("@cert-authority * {}", file_content).as_bytes())
                 .map_err(|_| "Failed to write to known_hosts file.")?;
 
-            Ok(1) 
+            Ok(1)
         }
         "host" => {
             let trusted_keys_dir = Path::new("/etc/ssh/trusted_keys");
@@ -147,7 +155,7 @@ pub fn add_ca_key(file_content: String, filename: String, role: String) -> Resul
 
             if let Ok(mut child) = result_combined {
                 child.wait().expect("Failed to wait for combined command");
-                Ok(1) 
+                Ok(1)
             } else {
                 Err("Failed to launch terminal for combined command".to_string())
             }
@@ -155,6 +163,3 @@ pub fn add_ca_key(file_content: String, filename: String, role: String) -> Resul
         _ => Err("Invalid role. Use 'user' or 'host'.".to_string()),
     }
 }
-
-
-

@@ -8,6 +8,7 @@ mod ssh;
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             commands::password_auth_command,
             commands::generate_keys_with_filename_command,
@@ -24,4 +25,3 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
