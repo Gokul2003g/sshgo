@@ -1,8 +1,7 @@
-use std::process::{exit, Command};
-use std::fs;
-use std::path::Path;
-use std::io;
 use dirs;
+use std::fs;
+use std::io;
+use std::process::{exit, Command};
 
 pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
     let ssh_dir = dirs::home_dir().unwrap().join(".ssh");
@@ -18,12 +17,12 @@ pub fn list_ssh_keys() -> Result<Vec<String>, io::Error> {
                 key_files.push(file_name);
             }
         }
-        
+
         for file in &key_files {
             if !file.ends_with(".pub") {
                 let pub_key = format!("{}.pub", file);
                 if key_files.contains(&pub_key) {
-                    private_keys.push(file.clone()); 
+                    private_keys.push(file.clone());
                 }
             }
         }
@@ -39,12 +38,12 @@ pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     };
 
     let private_key_path = ssh_dir.join(key_name);
-    let public_key_path = ssh_dir.join(format!("{}.pub", key_name)); 
+    let public_key_path = ssh_dir.join(format!("{}.pub", key_name));
     if private_key_path.exists() {
         fs::remove_file(private_key_path).map_err(|e| e.to_string())?;
     } else {
         return Err("Private key file does not exist".into());
-    } 
+    }
     if public_key_path.exists() {
         fs::remove_file(public_key_path).map_err(|e| e.to_string())?;
     }
@@ -70,9 +69,12 @@ pub fn generate_keys(algorithm: &str, password: &str) {
     let username = whoami::username();
     let output = Command::new("ssh-keygen")
         .args([
-            "-t", algorithm,
-            "-f", &format!("/home/{}/.ssh/id_{}", username, algorithm),
-            "-N", password,
+            "-t",
+            algorithm,
+            "-f",
+            &format!("/home/{}/.ssh/id_{}", username, algorithm),
+            "-N",
+            password,
         ])
         .output();
 
@@ -123,4 +125,3 @@ pub fn connect_ssh(username: &str) {
         }
     }
 }
-
