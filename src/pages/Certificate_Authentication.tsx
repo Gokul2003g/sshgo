@@ -41,8 +41,9 @@ const Certificate_Authentication = () => {
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
-      if (isSubmitting) return; // Prevent multiple submissions
+      if (isSubmitting) return; 
       setIsSubmitting(true);
+      setCertificate(""); 
 
       try {
         const cert = await invoke<string>("generate_certificate_command", {
@@ -55,29 +56,13 @@ const Certificate_Authentication = () => {
         console.log("Certificate generated:", cert);
       } catch (e) {
         console.error("Error generating certificate:", e);
+        setCertificate("Error generating certificate: " + e.message); 
       } finally {
         setIsSubmitting(false);
       }
     },
     [isSubmitting]
   );
-
-  const downloadKey = async (url: string, filename: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to download the file");
-
-      const blob = await response.blob();
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.setAttribute("download", filename);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error(`Error downloading ${filename}:`, error);
-    }
-  };
 
   const downloadCertificate = () => {
     if (!certificate || certificate === "Invalid Public Key") {
@@ -112,7 +97,7 @@ const Certificate_Authentication = () => {
           <Form {...form}>
             <form
               onSubmit={(e) => {
-                e.preventDefault(); // Prevent default form submission behavior
+                e.preventDefault(); 
                 form.handleSubmit(onSubmit)();
               }}
               className="space-y-8"
@@ -164,28 +149,12 @@ const Certificate_Authentication = () => {
           <Textarea
             className="my-8 text-sm h-36"
             readOnly
-            value={certificate}
+            value={certificate} 
             placeholder="Generated certificate will appear here"
           />
           <Button onClick={downloadCertificate}>Download Certificate</Button>
         </div>
         <Separator className="my-16 w-4/5 bg-black" />
-        <div className="w-3/4 flex justify-around">
-          <Button
-            onClick={() =>
-              downloadKey("/public/user-sign-key.pub", "user-sign-key.pub")
-            }
-          >
-            Download User Signing Public Key (Hosts Download this)
-          </Button>
-          <Button
-            onClick={() =>
-              downloadKey("/public/host-sign-key.pub", "host-sign-key.pub")
-            }
-          >
-            Download Host Signing Public Key (Users Download this)
-          </Button>
-        </div>
       </div>
     </div>
   );

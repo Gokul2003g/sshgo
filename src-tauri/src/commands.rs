@@ -70,7 +70,13 @@ pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
 #[tauri::command]
 pub async fn generate_certificate_command(public_key: String, is_host: bool, email: String, provider: String) -> Result<String, String> {
     match request_certificate(public_key, is_host, email, provider).await {
-        Ok(cert) => Ok(cert), // Return the certificate if successful
-        Err(e) => Err(format!("Error requesting certificate: {}", e)), // Return error if something goes wrong
+        Ok(cert) => {
+            Ok(cert) 
+        }
+        Err(e) => {
+            println!("Error generating certificate: {}", e);
+            Err(format!("Error requesting certificate: {}", e))
+        }
     }
 }
+
