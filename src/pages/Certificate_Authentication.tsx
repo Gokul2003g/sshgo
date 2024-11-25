@@ -63,6 +63,47 @@ const Certificate_Authentication = () => {
     },
     [isSubmitting]
   );
+    const downloadHostSignKey = async () => {
+    try {
+      const response = await axios.get(
+        `${SERVER_URI}/public/host-sign-key.pub`,
+        {
+          responseType: "blob",
+        },
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "host-sign-key.pub");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+  //
+  const downloadUserSignKey = async () => {
+    try {
+      const response = await axios.get(
+        `${SERVER_URI}/public/user-sign-key.pub`,
+        {
+          responseType: "blob",
+        },
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "user-sign-key.pub"); // Set the desired file name
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
 
   const downloadCertificate = () => {
     if (!certificate || certificate === "Invalid Public Key") {
@@ -155,6 +196,14 @@ const Certificate_Authentication = () => {
           <Button onClick={downloadCertificate}>Download Certificate</Button>
         </div>
         <Separator className="my-16 w-4/5 bg-black" />
+                <div className="w-3/4 flex justify-around">
+          <Button onClick={downloadUserSignKey}>
+            Download User Signing Public Key (Hosts Download this)
+          </Button>
+          <Button onClick={downloadHostSignKey}>
+            Download Host Signing Public Key (Users Download this)
+          </Button>
+        </div>
       </div>
     </div>
   );
