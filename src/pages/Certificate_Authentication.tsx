@@ -34,7 +34,7 @@ const Certificate_Authentication = () => {
     defaultValues: {
       public_key: "",
       is_host: false,
-      identity: "gokul2003g@gmail.com",
+      identity: "user1@example.com",
       provider: "google",
     },
   });
