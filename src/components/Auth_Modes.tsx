@@ -3,14 +3,12 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs"
-import { Certificate_Authentication } from "@/pages/Certificate_Authentication";
+} from "@/components/ui/tabs";
+import Certificate_Authentication from "@/pages/Certificate_Authentication";  // Correct import
 import { Connect_SSH } from "@/pages/Connect_SSH";
-import  ManageKeys  from "@/pages/manage_keys";
-
+import ManageKeys from "@/pages/manage_keys";
 
 function Auth_Modes() {
-
   return (
     <Tabs defaultValue="certificate_auth">
       <TabsList className="grid w-full grid-cols-3">
@@ -21,14 +19,15 @@ function Auth_Modes() {
       <TabsContent value="manage_keys">
         <ManageKeys />
       </TabsContent>
-      <TabsContent value="connect_ssh" className="flex justify-center items-center">
+      <TabsContent value="connect_ssh">
         <Connect_SSH />
       </TabsContent>
       <TabsContent value="certificate_auth">
         <Certificate_Authentication />
       </TabsContent>
     </Tabs>
-  )
+  );
 }
 
 export default Auth_Modes;
+

@@ -4,7 +4,7 @@ use crate::file::{
 use crate::ssh::{
     connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
 };
-
+use crate::certificate::request_certificate;
 #[tauri::command]
 pub fn password_auth_command(username: &str) {
     password_auth(username);
@@ -67,5 +67,10 @@ pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
 pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
     delete_ssh_key(key_name)
 }
-
-
+#[tauri::command]
+pub async fn generate_certificate_command(public_key: String, is_host: bool, email: String, provider: String) -> Result<String, String> {
+    match request_certificate(public_key, is_host, email, provider).await {
+        Ok(cert) => Ok(cert), // Return the certificate if successful
+        Err(e) => Err(format!("Error requesting certificate: {}", e)), // Return error if something goes wrong
+    }
+}
