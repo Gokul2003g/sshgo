@@ -28,7 +28,6 @@ pub async fn request_certificate(public_key: String, is_host: bool, identity: St
     let mut headers = HeaderMap::new();
     headers.insert(AUTHORIZATION, "Bearer hardcodedToken".parse()?);
     headers.insert(CONTENT_TYPE, "application/json".parse()?);
-    println!("is_host : {}",is_host);
     let client = reqwest::Client::new();
     let res = client
         .post(url)
