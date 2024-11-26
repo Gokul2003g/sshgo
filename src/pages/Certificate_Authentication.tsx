@@ -16,11 +16,12 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { invoke } from "@tauri-apps/api";
-
+import { invoke } from "@tauri-apps/api"; 
 const Certificate_Authentication = () => {
   const [certificate, setCertificate] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const formSchema = z.object({
     public_key: z.string().min(1, "Public key is required"),
@@ -41,9 +42,11 @@ const Certificate_Authentication = () => {
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
-      if (isSubmitting) return; 
+      if (isSubmitting) return;
       setIsSubmitting(true);
-      setCertificate(""); 
+      setCertificate("");
+      setErrorMessage(null);
+      setSuccessMessage(null);
 
       try {
         const cert = await invoke<string>("generate_certificate_command", {
@@ -53,61 +56,49 @@ const Certificate_Authentication = () => {
           provider: values.provider,
         });
         setCertificate(cert);
+        setSuccessMessage("Certificate generated successfully!");
         console.log("Certificate generated:", cert);
       } catch (e) {
         console.error("Error generating certificate:", e);
-        setCertificate("Error generating certificate: " + e.message); 
+        setErrorMessage("Error generating certificate: " + (e as Error).message);
       } finally {
         setIsSubmitting(false);
       }
     },
     [isSubmitting]
   );
-    const downloadHostSignKey = async () => {
-    try {
-      const response = await axios.get(
-        `${SERVER_URI}/public/host-sign-key.pub`,
-        {
-          responseType: "blob",
-        },
-      );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "host-sign-key.pub");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+  const downloadUserSignKey = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const message = await invoke<string>("download_user_signing_key_command");
+      console.log(message); // Log success message
+      setSuccessMessage(message); // Set success message
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error downloading user signing key:", error);
+      setErrorMessage("Failed to download user signing key.");
     }
   };
-  //
-  const downloadUserSignKey = async () => {
-    try {
-      const response = await axios.get(
-        `${SERVER_URI}/public/user-sign-key.pub`,
-        {
-          responseType: "blob",
-        },
-      );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "user-sign-key.pub"); // Set the desired file name
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+  const downloadHostSignKey = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const message = await invoke<string>("download_host_signing_key_command");
+      console.log(message); // Log success message
+      setSuccessMessage(message); // Set success message
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error downloading host signing key:", error);
+      setErrorMessage("Failed to download host signing key.");
     }
   };
 
   const downloadCertificate = () => {
     if (!certificate || certificate === "Invalid Public Key") {
-      console.error("No certificate available to download");
+      setErrorMessage("No certificate available to download.");
       return;
     }
 
@@ -119,6 +110,7 @@ const Certificate_Authentication = () => {
     document.body.appendChild(link);
     link.click();
     link.remove();
+    setSuccessMessage("Certificate downloaded successfully!");
   };
 
   return (
@@ -133,12 +125,12 @@ const Certificate_Authentication = () => {
         />
       </nav>
       <Separator />
-      <div className="flex flex-col items-center py-12 ">
+      <div className="flex flex-col items-center py-12">
         <div className="w-3/4">
           <Form {...form}>
             <form
               onSubmit={(e) => {
-                e.preventDefault(); 
+                e.preventDefault();
                 form.handleSubmit(onSubmit)();
               }}
               className="space-y-8"
@@ -190,13 +182,13 @@ const Certificate_Authentication = () => {
           <Textarea
             className="my-8 text-sm h-36"
             readOnly
-            value={certificate} 
+            value={certificate}
             placeholder="Generated certificate will appear here"
           />
           <Button onClick={downloadCertificate}>Download Certificate</Button>
         </div>
         <Separator className="my-16 w-4/5 bg-black" />
-                <div className="w-3/4 flex justify-around">
+        <div className="w-3/4 flex justify-around">
           <Button onClick={downloadUserSignKey}>
             Download User Signing Public Key (Hosts Download this)
           </Button>
@@ -204,6 +196,14 @@ const Certificate_Authentication = () => {
             Download Host Signing Public Key (Users Download this)
           </Button>
         </div>
+        <Separator />
+        {/* Show success or error messages */}
+        {successMessage && (
+          <div className="text-green-500 mt-4">{successMessage}</div>
+        )}
+        {errorMessage && (
+          <div className="text-red-500 mt-4">{errorMessage}</div>
+        )}
       </div>
     </div>
   );

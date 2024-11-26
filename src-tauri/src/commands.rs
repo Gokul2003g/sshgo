@@ -4,7 +4,7 @@ use crate::file::{
 use crate::ssh::{
     connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
 };
-use crate::certificate::request_certificate;
+use crate::certificate::{request_certificate, download_user_signing_key,download_host_signing_key,};
 #[tauri::command]
 pub fn password_auth_command(username: &str) {
     password_auth(username);
@@ -79,4 +79,12 @@ pub async fn generate_certificate_command(public_key: String, is_host: bool, ema
         }
     }
 }
+#[tauri::command]
+pub async fn download_user_signing_key_command() -> Result<String, String> {
+    download_user_signing_key().await
+}
 
+#[tauri::command]
+pub async fn download_host_signing_key_command() -> Result<String, String> {
+    download_host_signing_key().await
+}
