@@ -89,7 +89,7 @@ pub async fn download_user_signing_key_command() -> Result<String, String> {
 pub async fn download_host_signing_key_command() -> Result<String, String> {
     download_host_signing_key().await
 }
-
+#[tauri::command]
 pub fn rename_ssh_key_command(old_name: &str, new_name: &str) -> Result<(), String> {
     rename_ssh_key(old_name, new_name)
 }

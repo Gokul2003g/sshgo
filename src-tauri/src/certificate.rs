@@ -1,10 +1,9 @@
 use reqwest::header::{HeaderMap, AUTHORIZATION, CONTENT_TYPE};
-use serde::{Deserialize, Serialize};
+use serde::{Serialize};
 use std::error::Error;
-use base64::{encode};
 use std::path::{PathBuf};
 use std::fs;
-use std::env;
+use dirs;
 
 pub async fn download_user_signing_key() -> Result<String, String> {
     let url = "http://localhost:8000/public/user-sign-key.pub";
@@ -33,8 +32,13 @@ async fn fetch_and_save_key(url: &str, filename: &str) -> Result<String, String>
 }
 
 async fn save_key_to_downloads(filename: &str, content: &str) -> Result<PathBuf, std::io::Error> {
-    let home_dir = env::home_dir().ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "Home directory not found"))?;
+    // Use dirs::home_dir() to get the home directory
+    let home_dir = dirs::home_dir().ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "Home directory not found"))?;
+
+    // Append Downloads to the path
     let downloads_path = home_dir.join("Downloads").join(filename);
+    
+    // Write the content to the file
     fs::write(&downloads_path, content)?;
     Ok(downloads_path)
 }
@@ -47,10 +51,6 @@ struct CertificateRequest {
     provider: String,
 }
 
-#[derive(Deserialize)]
-struct CertificateResponse {
-    certificate: String,
-}
 
 pub async fn request_certificate(public_key: String, is_host: bool, identity: String, provider: String) -> Result<String, Box<dyn Error>> {
     let url = "http://localhost:8000/handle-post"; 
@@ -82,4 +82,5 @@ pub async fn request_certificate(public_key: String, is_host: bool, identity: St
         Err(format!("Failed to fetch certificate: {}", response_text).into())
     }
 }
+
 
