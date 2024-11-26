@@ -5,7 +5,7 @@ use crate::ssh::{
     connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
     rename_ssh_key, // Import the new rename function
 };
-
+use crate::certificate::{request_certificate, download_user_signing_key,download_host_signing_key,};
 #[tauri::command]
 pub fn password_auth_command(username: &str) {
     password_auth(username);
@@ -68,8 +68,28 @@ pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
 pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
     delete_ssh_key(key_name)
 }
+#[tauri::command]
+pub async fn generate_certificate_command(public_key: String, is_host: bool, email: String, provider: String) -> Result<String, String> {
+    match request_certificate(public_key, is_host, email, provider).await {
+        Ok(cert) => {
+            Ok(cert) 
+        }
+        Err(e) => {
+            println!("Error generating certificate: {}", e);
+            Err(format!("Error requesting certificate: {}", e))
+        }
+    }
+}
+#[tauri::command]
+pub async fn download_user_signing_key_command() -> Result<String, String> {
+    download_user_signing_key().await
+}
 
 #[tauri::command]
+pub async fn download_host_signing_key_command() -> Result<String, String> {
+    download_host_signing_key().await
+}
+
 pub fn rename_ssh_key_command(old_name: &str, new_name: &str) -> Result<(), String> {
     rename_ssh_key(old_name, new_name)
 }

@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -17,15 +16,15 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-
-export const Certificate_Authentication = () => {
-  // TODO: Remove console logs
-
-  const SERVER_URI = "http://localhost:8000";
+import { invoke } from "@tauri-apps/api"; 
+const Certificate_Authentication = () => {
   const [certificate, setCertificate] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const formSchema = z.object({
-    public_key: z.string(),
+    public_key: z.string().min(1, "Public key is required"),
     is_host: z.boolean().default(false),
     identity: z.string(),
     provider: z.string(),
@@ -36,84 +35,70 @@ export const Certificate_Authentication = () => {
     defaultValues: {
       public_key: "",
       is_host: false,
-      identity: "gokul2003g@gmail.com",
+      identity: "user1@example.com",
       provider: "google",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    //   console.error("User is not authenticated");
-    // if (!session || !session.data.idToken) {
-    //   return;
-    // }
-    //
-    // values.identity = userEmail || "not_set";
-    // values.provider = session.data.provider;
+  const onSubmit = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+      setCertificate("");
+      setErrorMessage(null);
+      setSuccessMessage(null);
 
-    const token = "hardcodedToken";
+      try {
+        const cert = await invoke<string>("generate_certificate_command", {
+          publicKey: values.public_key,
+          isHost: values.is_host,
+          email: values.identity,
+          provider: values.provider,
+        });
+        setCertificate(cert);
+        setSuccessMessage("Certificate generated successfully!");
+        console.log("Certificate generated:", cert);
+      } catch (e) {
+        console.error("Error generating certificate:", e);
+        setErrorMessage("Error generating certificate: " + (e as Error).message);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [isSubmitting]
+  );
+
+  const downloadUserSignKey = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
     try {
-      const response = await axios.post(SERVER_URI + "handle-post/", values, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      const cert = response.data;
-      setCertificate(cert);
-      // setCertificate(cert);
-      console.log(cert);
-      console.log(values);
-    } catch (e) {
-      console.log("Error sending form data", e);
-    }
-  }
-
-  const downloadHostSignKey = async () => {
-    try {
-      const response = await axios.get(
-        `${SERVER_URI}/public/host-sign-key.pub`,
-        {
-          responseType: "blob",
-        },
-      );
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "host-sign-key.pub");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const message = await invoke<string>("download_user_signing_key_command");
+      console.log(message); // Log success message
+      setSuccessMessage(message); // Set success message
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error downloading user signing key:", error);
+      setErrorMessage("Failed to download user signing key.");
     }
   };
-  //
-  const downloadUserSignKey = async () => {
-    try {
-      const response = await axios.get(
-        `${SERVER_URI}/public/user-sign-key.pub`,
-        {
-          responseType: "blob",
-        },
-      );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "user-sign-key.pub"); // Set the desired file name
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+  const downloadHostSignKey = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const message = await invoke<string>("download_host_signing_key_command");
+      console.log(message); // Log success message
+      setSuccessMessage(message); // Set success message
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error downloading host signing key:", error);
+      setErrorMessage("Failed to download host signing key.");
     }
   };
 
   const downloadCertificate = () => {
-    if (!certificate || certificate == "Invalid Public Key") {
-      console.error("No certificate available to download");
+    if (!certificate || certificate === "Invalid Public Key") {
+      setErrorMessage("No certificate available to download.");
       return;
     }
 
@@ -121,10 +106,11 @@ export const Certificate_Authentication = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "ssh-cert.pub"); // Set the desired file name
+    link.setAttribute("download", "ssh-cert.pub");
     document.body.appendChild(link);
     link.click();
     link.remove();
+    setSuccessMessage("Certificate downloaded successfully!");
   };
 
   return (
@@ -139,10 +125,16 @@ export const Certificate_Authentication = () => {
         />
       </nav>
       <Separator />
-      <div className="flex flex-col items-center py-12 ">
+      <div className="flex flex-col items-center py-12">
         <div className="w-3/4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit(onSubmit)();
+              }}
+              className="space-y-8"
+            >
               <FormField
                 control={form.control}
                 name="public_key"
@@ -161,28 +153,26 @@ export const Certificate_Authentication = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="is_host"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Are you Host?</FormLabel>
-                      <FormDescription>
-                        Toggle on to issue host certificate and off to issue
-                        user certificate
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Generate Certificate</Button>
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Are you Host?</FormLabel>
+                  <FormDescription>
+                    Toggle on to issue host certificate and off to issue user
+                    certificate
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={form.watch("is_host")}
+                    onCheckedChange={(value) =>
+                      form.setValue("is_host", value)
+                    }
+                  />
+                </FormControl>
+              </FormItem>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Generating..." : "Generate Certificate"}
+              </Button>
             </form>
           </Form>
         </div>
@@ -192,8 +182,8 @@ export const Certificate_Authentication = () => {
           <Textarea
             className="my-8 text-sm h-36"
             readOnly
-            // value={certificate}
-            placeholder="Upload your public key to be signed"
+            value={certificate}
+            placeholder="Generated certificate will appear here"
           />
           <Button onClick={downloadCertificate}>Download Certificate</Button>
         </div>
@@ -206,7 +196,18 @@ export const Certificate_Authentication = () => {
             Download Host Signing Public Key (Users Download this)
           </Button>
         </div>
+        <Separator />
+        {/* Show success or error messages */}
+        {successMessage && (
+          <div className="text-green-500 mt-4">{successMessage}</div>
+        )}
+        {errorMessage && (
+          <div className="text-red-500 mt-4">{errorMessage}</div>
+        )}
       </div>
     </div>
   );
 };
+
+export default Certificate_Authentication;
+

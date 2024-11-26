@@ -5,7 +5,7 @@
 mod commands;
 mod file;
 mod ssh;
-
+mod certificate;
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -20,6 +20,9 @@ fn main() {
             commands::add_ca_key_command,
             commands::list_ssh_keys_command,
             commands::delete_ssh_key_command,
+            commands::generate_certificate_command,
+            commands::download_user_signing_key_command,
+            commands::download_host_signing_key_command,
             commands::rename_ssh_key_command
         ])
         .run(tauri::generate_context!())
