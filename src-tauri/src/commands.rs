@@ -3,6 +3,7 @@ use crate::file::{
 };
 use crate::ssh::{
     connect_ssh, generate_keys, password_auth, secure_copy, list_ssh_keys, delete_ssh_key,
+    rename_ssh_key, // Import the new rename function
 };
 use crate::certificate::{request_certificate, download_user_signing_key,download_host_signing_key,};
 #[tauri::command]
@@ -87,4 +88,8 @@ pub async fn download_user_signing_key_command() -> Result<String, String> {
 #[tauri::command]
 pub async fn download_host_signing_key_command() -> Result<String, String> {
     download_host_signing_key().await
+}
+
+pub fn rename_ssh_key_command(old_name: &str, new_name: &str) -> Result<(), String> {
+    rename_ssh_key(old_name, new_name)
 }

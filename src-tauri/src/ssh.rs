@@ -51,6 +51,35 @@ pub fn delete_ssh_key(key_name: &str) -> Result<(), String> {
     Ok(())
 }
 
+pub fn rename_ssh_key(old_name: &str, new_name: &str) -> Result<(), String> {
+    let ssh_dir = match dirs::home_dir() {
+        Some(path) => path.join(".ssh"),
+        None => return Err("Home directory not found".into()),
+    };
+
+    let old_private_key_path = ssh_dir.join(old_name);
+    let old_public_key_path = ssh_dir.join(format!("{}.pub", old_name));
+    let new_private_key_path = ssh_dir.join(new_name);
+    let new_public_key_path = ssh_dir.join(format!("{}.pub", new_name));
+
+    // Check if the old key exists
+    if !old_private_key_path.exists() {
+        return Err("Old private key file does not exist".into());
+    }
+
+    // Rename the private key
+    fs::rename(&old_private_key_path, &new_private_key_path)
+        .map_err(|e| e.to_string())?;
+
+    // Rename the public key if it exists
+    if old_public_key_path.exists() {
+        fs::rename(&old_public_key_path, &new_public_key_path)
+            .map_err(|e| e.to_string())?;
+    }
+
+    Ok(())
+}
+
 pub fn password_auth(username: &str) {
     match Command::new("sh")
         .arg("-c")

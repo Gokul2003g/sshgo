@@ -22,7 +22,8 @@ fn main() {
             commands::delete_ssh_key_command,
             commands::generate_certificate_command,
             commands::download_user_signing_key_command,
-            commands::download_host_signing_key_command
+            commands::download_host_signing_key_command,
+            commands::rename_ssh_key_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
