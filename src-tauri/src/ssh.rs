@@ -1,6 +1,5 @@
 use std::process::{exit, Command};
 use std::fs;
-use std::path::Path;
 use std::io;
 use dirs;
 

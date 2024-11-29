@@ -67,5 +67,3 @@ pub fn list_ssh_keys_command() -> Result<Vec<String>, String> {
 pub fn delete_ssh_key_command(key_name: &str) -> Result<(), String> {
     delete_ssh_key(key_name)
 }
-
-
