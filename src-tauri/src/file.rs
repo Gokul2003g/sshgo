@@ -68,16 +68,23 @@ pub fn check_ssh_keys() -> Result<Vec<String>, String> {
 
 pub fn save_connection(connection: String) -> Result<(), String> {
     let username = whoami::username();
-    if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(format!(
-        "/home/{}/.config/sshgo/previousConnections",
-        username
-    )) {
-        if let Err(err) = writeln!(file, "{}", connection) {
-            return Err(format!("Error writing to file: {}", err));
+    let config_dir = format!("/home/{}/.config/sshgo", username);
+    let file_path = format!("{}/previousConnections", config_dir);
+
+    // Create the config directory if it does not exist
+    if let Err(err) = create_dir_all(&config_dir) {
+        return Err(format!("Error creating directory: {}", err));
+    }
+
+    // Open the file, create it if it does not exist, and append to it
+    match OpenOptions::new().create(true).append(true).open(&file_path) {
+        Ok(mut file) => {
+            if let Err(err) = writeln!(file, "{}", connection) {
+                return Err(format!("Error writing to file: {}", err));
+            }
+            Ok(())
         }
-        Ok(())
-    } else {
-        Err(String::from("Error opening file"))
+        Err(_) => Err(String::from("Error opening file")),
     }
 }
 
@@ -102,6 +109,36 @@ pub fn load_connections() -> Result<Vec<String>, String> {
 
     Ok(connections)
 }
+
+pub fn delete_connection(connection_to_delete: String) -> Result<(), String> {
+    let username = whoami::username();
+    let file_path = format!("/home/{}/.config/sshgo/previousConnections", username);
+
+    // Read the existing connections
+    let file = File::open(&file_path).map_err(|err| format!("Error opening file: {}", err))?;
+    let reader = BufReader::new(file);
+    let mut connections: Vec<String> = reader
+        .lines()
+        .filter_map(|line| line.ok()) // Ignore lines that fail to read
+        .collect();
+
+    // Remove the specified connection
+    let original_len = connections.len();
+    connections.retain(|connection| connection != &connection_to_delete);
+
+    if connections.len() == original_len {
+        return Err("Connection not found".to_string());
+    }
+
+    // Write the updated connections back to the file
+    let mut file = File::create(&file_path).map_err(|err| format!("Error creating file: {}", err))?;
+    for connection in connections {
+        writeln!(file, "{}", connection).map_err(|err| format!("Error writing to file: {}", err))?;
+    }
+
+    Ok(())
+}
+
 pub fn add_ca_key(file_content: String, filename: String, role: String) -> Result<i32, String> {
     match role.as_str() {
         "user" => {
